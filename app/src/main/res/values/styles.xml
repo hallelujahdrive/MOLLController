@@ -1,0 +1,30 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="android:windowActionBarOverlay">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="colorPrimary">@color/material_red_500</item>
+        <item name="colorPrimaryDark">@color/material_red_700</item>
+        <item name="deviceViewStyle">@style/DeviceView</item>
+        <item name="menuItemViewStyle">@style/MenuItemView</item>
+    </style>
+
+    <style name="DeviceView" >
+    </style>
+
+    <style name="MenuItemView" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:minHeight">?attr/listPreferredItemHeightSmall</item>
+        <item name="android:paddingLeft">?attr/listPreferredItemPaddingLeft</item>
+        <item name="android:paddingRight">?attr/listPreferredItemPaddingLeft</item>
+        <item name="android:drawablePadding">@dimen/navigation_icon_padding</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:clickable">false</item>
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:textAppearance">?attr/textAppearanceListItem</item>
+    </style>
+
+</resources>
