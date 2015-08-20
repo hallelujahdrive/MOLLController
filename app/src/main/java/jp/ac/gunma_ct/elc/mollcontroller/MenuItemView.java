@@ -39,7 +39,7 @@ public class MenuItemView extends TextView {
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.MenuItemView, defStyle, 0);
 
-        mIconSize=getResources().getDimensionPixelSize(android.support.design.R.dimen.navigation_icon_size);
+        mIconSize=getResources().getDimensionPixelSize(android.support.design.R.dimen.design_navigation_icon_size);
 
         //iconTintListのset
         if(a.hasValue(R.styleable.MenuItemView_itemIconTint)){

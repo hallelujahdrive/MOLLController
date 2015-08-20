@@ -1,5 +1,6 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
@@ -8,11 +9,21 @@ import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothProfile;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.ScaleAnimation;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import javax.sql.StatementEvent;
 
 /**
  * Created by Chiharu on 2015/08/14.
@@ -30,6 +41,12 @@ public class AutoFragment extends Fragment implements DeviceListDialogFragment.O
 
     private DeviceView mMollDeviceView;
     private DeviceView mTagDeviceView;
+
+    private LinearLayout mTagDeviceLayout;
+
+    private LinearLayout mStatusLayout;
+    private TextView mRssiTextView;
+    private TextView mDistanceTextView;
 
     private BluetoothGatt mMollBluetoothGatt;
     private BluetoothGatt mTagBluetoothGatt;
@@ -52,8 +69,14 @@ public class AutoFragment extends Fragment implements DeviceListDialogFragment.O
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_auto, container, false);
 
-        mMollDeviceView= (DeviceView) rootView.findViewById(R.id.moll_device_view);
-        mTagDeviceView= (DeviceView) rootView.findViewById(R.id.tag_device_view);
+        mMollDeviceView = (DeviceView) rootView.findViewById(R.id.moll_device_view);
+        mTagDeviceView = (DeviceView) rootView.findViewById(R.id.tag_device_view);
+        mTagDeviceLayout = (LinearLayout) rootView.findViewById(R.id.tag_device_layout);
+        mStatusLayout = (LinearLayout) rootView.findViewById(R.id.status_layout);
+        mRssiTextView = (TextView) rootView.findViewById(R.id.rssi_text_view);
+        mDistanceTextView = (TextView) rootView.findViewById(R.id.distance_text_view);
+
+        mTagDeviceLayout.removeView(mStatusLayout);
 
         mMollDeviceView.setOnButtonClickListener(new View.OnClickListener() {
             @Override
@@ -139,7 +162,8 @@ public class AutoFragment extends Fragment implements DeviceListDialogFragment.O
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                    Toast.makeText(getActivity(),String.valueOf(rssi),Toast.LENGTH_LONG).show();
+                                    //信号強度の表示
+                                    mRssiTextView.setText(String.valueOf(rssi));
                                 }
                             });
                         }
@@ -157,7 +181,24 @@ public class AutoFragment extends Fragment implements DeviceListDialogFragment.O
                     public void run() {
                         //接続
                         deviceView.setConnectionStatus(true);
-                        mTagBluetoothGatt.readRemoteRssi();
+                        //StatusLayoutの追加
+                        if(mStatusLayout.getParent()!=mTagDeviceLayout){
+                            mTagDeviceLayout.addView(mStatusLayout, 1);
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    while (mTagBluetoothGatt != null && mTagDeviceView.getConnected()) {
+                                        mTagBluetoothGatt.readRemoteRssi();
+                                        try {
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }).start();
+                        }
                         //メッセージ表示
                         Toast.makeText(getActivity(), R.string.message_connected, Toast.LENGTH_LONG).show();
                     }
@@ -170,6 +211,10 @@ public class AutoFragment extends Fragment implements DeviceListDialogFragment.O
                         public void run() {
                             //切断
                             deviceView.setConnectionStatus(false);
+                            //StatusLayoutの削除
+                            if(mStatusLayout.getParent()!=null) {
+                                mTagDeviceLayout.removeView(mStatusLayout);
+                            }
                             //メッセージ表示
                             Toast.makeText(getActivity(), R.string.message_disconnected, Toast.LENGTH_LONG).show();
                         }

@@ -46,7 +46,7 @@ public class DeviceDataDialogFragment extends DialogFragment {
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
 
-        View view = inflater.inflate(R.layout.device_data_dialog,null);
+        View view = inflater.inflate(R.layout.dialog_device_data,null);
 
         mNameTextView = (TextView) view.findViewById(R.id.name_text_view);
         mAddressTextView = (TextView) view.findViewById(R.id.address_text_view);

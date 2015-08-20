@@ -2,46 +2,46 @@
 <items version="2" >
 
     <item
-        jar="C:\Users\Chiharu\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\22.2.1\support-annotations-22.2.1.jar"
+        jar="C:\Users\Chiharu\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.0\support-annotations-23.0.0.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="61a0ff5c29295ec56d7e0bd3d25d95dbf71b4b2b">
-        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\support-annotations-22.2.1-7cac24f6f4defe75a77848589d9ddac13c0fddf0.jar" />
+        sha1="990e7f98a7bad86a40b1f0bcfeb039023afd0839">
+        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.0-e55dcc6dbd711767e730b49f4add1181071e2cd7.jar" />
     </item>
     <item
-        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\classes.jar"
+        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="f8efd0096475e0daf054267b61544e10dc776503">
-        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-079c220b215992ae3c7bea4eb55c275e33863b7b.jar" />
+        sha1="1ccbc26be2c465c622a48310e8092241b01abe80">
+        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-6880e85f5e9d0693057ec254a5b4c78353b0fb7d.jar" />
     </item>
     <item
-        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\22.2.1\jars\classes.jar"
+        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\appcompat-v7\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="4486e953d1f35f8ccab098b1dd67146366d5f731">
-        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-bf55a1e2c84d58605ef86e9b7807000e23951bdd.jar" />
+        sha1="4fcf0b1879f8caf497c073e1432d398e9e2988c1">
+        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-54ba345a6750243bfcf4b5b21114e7a41ca6e948.jar" />
     </item>
     <item
-        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\support-v4\22.2.1\jars\libs\internal_impl-22.2.1.jar"
+        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\design\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="c471eaaba13ff64f6e0383d1c30a9cdc9a97efeb">
-        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\internal_impl-22.2.1-56c110963c15e5597486c3e0fd8c4474a3654af5.jar" />
+        sha1="8a5238e4bdcd6568b82db669d41817de670586b8">
+        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-7c7f147c5b00ca0388d0846730186622ba91f52c.jar" />
     </item>
     <item
-        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\design\22.2.1\jars\classes.jar"
+        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\libs\internal_impl-23.0.0.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="1821601ddbec5ff125653097812823388700af74">
-        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-817fb1697bf8883afb1f6177ce16245652df477e.jar" />
+        sha1="8bd336eeae661e8311330284897ee07f8ebaa297">
+        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.0-27192021a30e8e294e2b9e963968184e7de84e01.jar" />
     </item>
     <item
-        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\cardview-v7\22.2.1\jars\classes.jar"
+        jar="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\exploded-aar\com.android.support\support-v4\23.0.0\jars\classes.jar"
         jumboMode="false"
         revision="23.0.0"
-        sha1="e1fa5e1123997a55e3ed65b44892993ff4b58cfe">
-        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-726fc0ec8fa753e82c2d3e0c4ebc51ee1f501586.jar" />
+        sha1="8413c27b45b7fe61dca4a98159f65e2cee215f5a">
+        <dex dex="C:\Users\Chiharu\AndroidStudioProjects\MOLLController\app\build\intermediates\pre-dexed\debug\classes-af60cbb2c7cf5cad027538a4bd7dd4dc4a7f61a2.jar" />
     </item>
 
 </items>
