@@ -1,9 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/action_auto"
-        android:title="@string/title_auto"
-        android:icon="@drawable/ic_action_my_location"/>
-    <item android:id="@+id/action_manual"
-        android:title="@string/title_manual"
-        android:icon="@drawable/ic_action_gamepad"/>
+    <group>
+        <item android:id="@+id/action_auto"
+            android:title="@string/title_auto"
+            android:icon="@drawable/ic_action_my_location"/>
+        <item android:id="@+id/action_manual"
+            android:title="@string/title_manual"
+            android:icon="@drawable/ic_action_gamepad"/>
+    </group>
+    <group>
+        <item android:id="@id/action_settings"
+            android:title="@string/title_settings"
+            android:icon="@drawable/ic_action_settings" />
+    </group>
 </menu>

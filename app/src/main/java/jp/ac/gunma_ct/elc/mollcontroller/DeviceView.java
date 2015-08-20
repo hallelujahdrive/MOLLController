@@ -82,7 +82,7 @@ public class DeviceView extends GridLayout {
         }
         if(icon!=null){
             mIconImageView.setImageDrawable(icon);
-        }
+        } 
 
         mConnectionSwitch.setChecked(connected);
         mStatusTextView.setText(id);

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="CardViewRaisedButtonButton" parent="Base.Widget.AppCompat.Button">
+        <item name="android:background">@drawable/btn_in_cardview_mtrl</item>
+        <item name="android:textColor">?attr/colorAccent</item>
+    </style>
+</resources>
