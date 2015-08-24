@@ -11,7 +11,15 @@
         <attr name="android:icon" />
     </declare-styleable>
 
+    <declare-styleable name="SeekBarPreference" >
+        <attr name="min" format="integer|reference" />
+        <attr name="max" format="integer|reference" />
+        <attr name="magnification" format="integer|reference" />
+        <attr name="unit" format="string|reference" />
+    </declare-styleable>
+
     <attr name="deviceViewStyle" format="integer|reference" />
     <attr name="menuItemViewStyle" format="integer|reference"/>
+    <attr name="seekBarPreferenceStyle" format="integer|reference" />
 
 </resources>

@@ -1,8 +1,10 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -16,8 +18,6 @@ public class DeviceDataDialogFragment extends DialogFragment {
 
     private static final String ARG_ID="ID";
     private static final String ARG_DEVICE="DEVICE";
-
-    private OnDialogInteractionListener mListener;
 
     private TextView mNameTextView;
     private TextView mAddressTextView;
@@ -35,8 +35,6 @@ public class DeviceDataDialogFragment extends DialogFragment {
 
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState){
-
-        mListener = (OnDialogInteractionListener) getTargetFragment();
 
         final BluetoothDevice device=getArguments().getParcelable(ARG_DEVICE);
 
@@ -78,7 +76,10 @@ public class DeviceDataDialogFragment extends DialogFragment {
         builder.setPositiveButton(R.string.action_connect, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mListener.onDataCallback(getArguments().getInt(ARG_ID), device);
+                Intent i = new Intent();
+                i.putExtra(ARG_ID,getArguments().getInt(ARG_ID));
+                i.putExtra(ARG_DEVICE,device);
+                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,i);
             }
         }).setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
             //ダイアログを閉じる
@@ -89,9 +90,5 @@ public class DeviceDataDialogFragment extends DialogFragment {
         });
 
         return builder.create();
-    }
-
-    public interface OnDialogInteractionListener{
-        void onDataCallback(int id, BluetoothDevice device);
     }
 }

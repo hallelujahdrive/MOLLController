@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory>
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_scan_period"
+            android:title="@string/title_scan_period"
+            app:min="@integer/scan_period_min"
+            app:max="@integer/scan_period_max"
+            app:magnification="@integer/scan_period_magnification"
+            app:unit="@string/unit_second" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_interval"
+            android:title="@string/title_interval"
+            app:min="@integer/interval_min"
+            app:max="@integer/interval_max"
+            app:magnification="@integer/interval_magnification"
+            app:unit="@string/unit_milli_second" />
+    </PreferenceCategory>
+    <PreferenceCategory>
+        <PreferenceScreen
+            android:key="@string/key_license"
+            android:title="@string/title_license" />
+    </PreferenceCategory>
+</PreferenceScreen>

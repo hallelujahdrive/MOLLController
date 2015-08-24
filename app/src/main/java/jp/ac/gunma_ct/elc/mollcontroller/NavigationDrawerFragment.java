@@ -1,5 +1,6 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBarActivity;
@@ -100,6 +101,8 @@ public class NavigationDrawerFragment extends Fragment {
                     case R.id.action_manual:
                         selectItem(1);
                         break;
+                    default:
+                        selectItem(-1);
                 }
                 return false;
             }
@@ -203,10 +206,10 @@ public class NavigationDrawerFragment extends Fragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         try {
-            mCallbacks = (NavigationDrawerCallbacks) activity;
+            mCallbacks = (NavigationDrawerCallbacks) context;
         } catch (ClassCastException e) {
             throw new ClassCastException("Activity must implement NavigationDrawerCallbacks.");
         }
@@ -269,7 +272,7 @@ public class NavigationDrawerFragment extends Fragment {
     /**
      * Callbacks interface that all activities using this fragment must implement.
      */
-    public static interface NavigationDrawerCallbacks {
+    public interface NavigationDrawerCallbacks {
         /**
          * Called when an item in the navigation drawer is selected.
          */

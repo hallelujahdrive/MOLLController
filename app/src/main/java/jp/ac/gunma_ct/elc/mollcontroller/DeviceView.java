@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -50,7 +49,7 @@ public class DeviceView extends GridLayout {
     //初期化
     public void init(AttributeSet attrs,int defStyle){
 
-        TypedArray array = getContext().obtainStyledAttributes(attrs, R.styleable.DeviceView);
+        TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.DeviceView, defStyle, 0);
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.device_view,this);
 
@@ -64,9 +63,9 @@ public class DeviceView extends GridLayout {
         TypedValue outValue = new TypedValue();
         getContext().getTheme().resolveAttribute(android.R.attr.textColorSecondary,outValue,true);
 
-        mTitleTextView.setText(array.getText(R.styleable.DeviceView_title));
+        mTitleTextView.setText(a.getText(R.styleable.DeviceView_title));
 
-        array.recycle();
+        a.recycle();
     }
 
     public void setConnectionStatus(boolean connected){
@@ -82,7 +81,7 @@ public class DeviceView extends GridLayout {
         }
         if(icon!=null){
             mIconImageView.setImageDrawable(icon);
-        } 
+        }
 
         mConnectionSwitch.setChecked(connected);
         mStatusTextView.setText(id);

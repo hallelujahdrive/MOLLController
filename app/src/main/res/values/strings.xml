@@ -18,10 +18,17 @@
     <string name="title_rssi">信号強度</string>
     <string name="title_distance">距離</string>
 
+    <string name="title_activity_settings">設定</string>
+
+    <string name="title_scan_period">スキャン時間</string>
+    <string name="title_interval">更新間隔</string>
+    <string name="title_license">ライセンス情報</string>
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="message_no_bluetooth">Bluetoothデバイスが存在しません</string>
+    <string name="message_device_not_found">デバイスが見つかりませんでした</string>
 
     <string name="message_disconnected">切断しました</string>
     <string name="message_connected">接続しました</string>
@@ -29,8 +36,10 @@
     <string name="action_settings">設定</string>
 
     <string name="action_ok">OK</string>
-    <string name="action_cancel">キャンセル</string>
+    <string name="action_rescan">再検索</string>
     <string name="action_connect">接続</string>
+
+    <string name="action_cancel">キャンセル</string>
 
     <string name="action_searching">検索中です</string>
 
@@ -38,9 +47,14 @@
     <string name="status_connected">接続</string>
     <string name="status_disconnected">切断</string>
 
+    <string name="unit_second">秒</string>
+    <string name="unit_milli_second">ミリ秒</string>
+
     <string name="device_type_classic">DEVICE TYPE CLASSIC</string>
     <string name="device_type_le">DEVICE TYPE LE</string>
     <string name="device_type_dual">DEVICE TYPE DUAL</string>
     <string name="device_type_unknown">DEVICE_TYPE_UNKNOWN</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>

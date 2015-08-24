@@ -1,15 +1,23 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
+import android.animation.LayoutTransition;
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.DialogPreference;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -21,16 +29,16 @@ import java.util.HashSet;
  */
 public class DeviceListDialogFragment extends DialogFragment {
 
-    private static final long SCAN_PERIOD =10000;
+    private static final int DEFAULT_SCAN_PERIOD = 10;
 
     private static final String ARG_ID ="ID";
-
-    private OnDialogInteractionListener mListener;
+    private static final String ARG_DEVICE = "DEVICE";
 
     private ListView mListView;
     private View mHeaderView;
 
     private BluetoothAdapter mBluetoothAdapter;
+    private long mScanPeriod;
     private boolean mScanning;
 
     private BluetoothAdapter.LeScanCallback mLeScanCallback;
@@ -49,8 +57,9 @@ public class DeviceListDialogFragment extends DialogFragment {
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState){
 
-        //Listenerの登録
-        mListener=(OnDialogInteractionListener)getTargetFragment();
+        //スキャン時間の設定
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mScanPeriod = sp.getInt(getString(R.string.key_scan_period),DEFAULT_SCAN_PERIOD) * 1000;
 
         mHeaderView=getActivity().getLayoutInflater().inflate(R.layout.device_list_header_view,null);
         mHeaderView.setClickable(false);
@@ -61,7 +70,7 @@ public class DeviceListDialogFragment extends DialogFragment {
         mListView=new ListView(getActivity());
         mListView.setDivider(null);
 
-        mListView.addHeaderView(mHeaderView,null,false);
+        mListView.addHeaderView(mHeaderView, null, false);
 
         final DeviceAdapter adapter=new DeviceAdapter(getActivity(),0);
         mListView.setAdapter(adapter);
@@ -70,7 +79,10 @@ public class DeviceListDialogFragment extends DialogFragment {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                mListener.onListCallback(getArguments().getInt(ARG_ID),adapter.getItem(position-(mScanning?1:0)));
+                Intent i = new Intent();
+                i.putExtra(ARG_ID,getArguments().getInt(ARG_ID));
+                i.putExtra(ARG_DEVICE,adapter.getItem(position - (mScanning ? 1 : 0)));
+                getTargetFragment().onActivityResult(getTargetRequestCode(),Activity.RESULT_OK,i);
                 dismiss();
             }
         });
@@ -81,7 +93,7 @@ public class DeviceListDialogFragment extends DialogFragment {
         mBluetoothAdapter = bluetoothManager.getAdapter();
 
 
-        mLeScanCallback=new BluetoothAdapter.LeScanCallback() {
+        mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
             @Override
             public void onLeScan(final BluetoothDevice device, int rssi, byte[] scanRecord) {
                 if (device != null) {
@@ -96,6 +108,7 @@ public class DeviceListDialogFragment extends DialogFragment {
             }
         };
 
+
         scanDevice(true);
 
         return builder.create();
@@ -106,20 +119,36 @@ public class DeviceListDialogFragment extends DialogFragment {
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    mScanning = false;
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    mListView.removeHeaderView(mHeaderView);
+                    scanEnd();
                 }
-            }, SCAN_PERIOD);
+            }, mScanPeriod);
 
             mScanning=true;
             mBluetoothAdapter.startLeScan(mLeScanCallback);
 
         }else{
-            mScanning=false;
-            mBluetoothAdapter.stopLeScan(mLeScanCallback);
-            mListView.removeHeaderView(mHeaderView);
+            scanEnd();
         }
+    }
+
+    private void scanEnd() {
+        mScanning = false;
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+        mListView.removeHeaderView(mHeaderView);
+        if(mListView.getCount() == 0){
+            Intent i = new Intent();
+            i.putExtra(ARG_ID, getArguments().getInt(ARG_ID));
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED,i );
+            dismiss();
+        }
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog){
+        mBluetoothAdapter.stopLeScan(mLeScanCallback);
+
+        super.onDismiss(dialog);
+
     }
 
     private class DeviceAdapter extends ArrayAdapter<BluetoothDevice> {
@@ -148,11 +177,10 @@ public class DeviceListDialogFragment extends DialogFragment {
             ((MenuItemView) convertView).setText(device.getName());
             ((MenuItemView) convertView).setIcon(getResources().getDrawable(R.drawable.ic_action_bluetooth));
 
+            //追加アニメーション
+            //convertView.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.add_animation));
+
             return convertView;
         }
-    }
-
-    public interface OnDialogInteractionListener{
-        void onListCallback(int id,BluetoothDevice device);
     }
 }

@@ -7,11 +7,7 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="colorPrimary">@color/material_red_500</item>
         <item name="colorPrimaryDark">@color/material_red_700</item>
-        <item name="deviceViewStyle">@style/DeviceView</item>
         <item name="menuItemViewStyle">@style/MenuItemView</item>
-    </style>
-
-    <style name="DeviceView" >
     </style>
 
     <style name="MenuItemView" parent="@android:style/TextAppearance.Widget.TextView">

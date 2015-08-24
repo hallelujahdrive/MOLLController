@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_scan_period">SCAN_PERIOD</string>
+    <string name="key_interval">INTERVAL</string>
+    <string name="key_license">LICENSE</string>
+</resources>

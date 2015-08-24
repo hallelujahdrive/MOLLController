@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="scan_period_min">1</integer>
+    <integer name="scan_period_max">6</integer>
+    <integer name="scan_period_magnification">10</integer>
+
+    <integer name="interval_min">10</integer>
+    <integer name="interval_max">100</integer>
+    <integer name="interval_magnification">10</integer>
+</resources>

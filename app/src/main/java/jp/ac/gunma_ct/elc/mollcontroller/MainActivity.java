@@ -1,16 +1,18 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
-import android.animation.Animator;
+import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -21,20 +23,30 @@ import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private static final int REQUEST_ENABLE_BT=0;
+    private static final int REQUEST_CODE_SETTINGS = 0;
+    private static final int REQUEST_ENABLE_BT = 0;
+
+    private static final int VALUE_DEFAULT_SCAN_PERIOD = 10;
+    private static final int VALUE_DEFAULT_INTERVAL = 1000;
+
+    private static final String KEY_PREFERENCE_EXIST = "PREFERENCE_EXIST";
 
     private static final String TAG_NO_BLUETOOTH = "NO_BLUETOOTH";
+    private static final String TAG_AUTO = "AUTO";
+    private static final String TAG_MANUAL = "MANUAL";
+
+    private SharedPreferences mSp;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
-    private FrameLayout mToolbarLayout;
+    private LinearLayout mToolbarLayout;
 
     private BluetoothAdapter mBluetoothAdapter;
 
@@ -48,13 +60,17 @@ public class MainActivity extends ActionBarActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //SharedPreferenceの取得
+        mSp = PreferenceManager.getDefaultSharedPreferences(getApplication());
+        getSettings();
+
         //画面サイズの取得
         Point point=new Point();
         getWindowManager().getDefaultDisplay().getSize(point);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mToolbarLayout= (FrameLayout) findViewById(R.id.toolbar_layout);
+        mToolbarLayout= (LinearLayout) findViewById(R.id.toolbar_layout);
 
         Toolbar toolbar= (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,28 +102,34 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
-        FragmentManager fragmentManager = getFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if(position < 0) {
+            startSettingsActivity();
+        }else{
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
 
-        final ActionBar actionBar=getSupportActionBar();
+            final ActionBar actionBar = getSupportActionBar();
 
-        switch (position){
-            case 0:
-                transaction.replace(R.id.container, AutoFragment.newInstance(position));
-                //ActionBarの表示
-                if(actionBar!=null){
-                    mToolbarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
-                }
-                break;
-            case 1:
-                transaction.replace(R.id.container, ManualFragment.newInstance(position));
-                //ActionBarの非表示
-                if(actionBar!=null){
-                    mToolbarLayout.animate().translationY(-mToolbarLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
-                }
-                break;
+            switch (position) {
+                //自動探索
+                case 0:
+                    transaction.replace(R.id.container, AutoFragment.newInstance(position),TAG_AUTO);
+                    //ActionBarの表示
+                    if (actionBar != null) {
+                        mToolbarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
+                    }
+                    break;
+                //コントローラ
+                case 1:
+                    transaction.replace(R.id.container, ManualFragment.newInstance(position),TAG_MANUAL);
+                    //ActionBarの非表示
+                    if (actionBar != null) {
+                        mToolbarLayout.animate().translationY(-mToolbarLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
+                    }
+                    break;
+            }
+            transaction.commit();
         }
-        transaction.commit();
     }
 
     public void onSectionAttached(int number) {
@@ -127,7 +149,6 @@ public class MainActivity extends ActionBarActivity
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -151,14 +172,54 @@ public class MainActivity extends ActionBarActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            startSettingsActivity();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode){
+            case REQUEST_CODE_SETTINGS:
+                switch (resultCode){
+                    case Activity.RESULT_OK:
+                        //Intervalの更新
+                        android.app.Fragment fragment = getFragmentManager().findFragmentByTag(TAG_AUTO);
+                        if(fragment != null){
+                            ((AutoFragment)fragment).setInterval();
+                        }
+                }
+                break;
+        }
+    }
 
-    public static class NoBluetoothDialog extends DialogFragment {
+    private void getSettings(){
+        //初回起動ならデフォルトを設定
+        if(!mSp.getBoolean(KEY_PREFERENCE_EXIST,false)){
+            putDefaultSettings();
+        }
+    }
+
+    private void putDefaultSettings(){
+        SharedPreferences.Editor editor = mSp.edit();
+
+        editor.putBoolean(KEY_PREFERENCE_EXIST,true);
+        editor.putInt(getString(R.string.key_scan_period), VALUE_DEFAULT_SCAN_PERIOD);
+        editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
+
+        //ﾁｮｹﾞﾌﾟﾙｨｨｨｨ
+        editor.apply();
+    }
+
+    private void startSettingsActivity(){
+        Intent i = new Intent(this,SettingsActivity.class);
+        startActivityForResult(i,REQUEST_CODE_SETTINGS);
+    }
+
+
+    private static class NoBluetoothDialog extends DialogFragment {
 
         @Override
         public AlertDialog onCreateDialog(Bundle savedInstanceState){
