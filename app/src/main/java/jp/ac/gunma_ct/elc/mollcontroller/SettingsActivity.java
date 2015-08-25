@@ -1,7 +1,7 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
 import android.app.FragmentManager;
-import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -9,6 +9,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.ListAdapter;
 
 public class SettingsActivity extends AppCompatActivity{
@@ -28,7 +29,24 @@ public class SettingsActivity extends AppCompatActivity{
         }
 
         FragmentManager fragmentManager=getFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.container,new SettingsFragment()).commit();
+        fragmentManager.beginTransaction().replace(R.id.container, new SettingsFragment()).commit();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        switch (id){
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     public static class SettingsFragment extends PreferenceFragment {
@@ -45,13 +63,27 @@ public class SettingsActivity extends AppCompatActivity{
                     //ResultCodeのset
                     getActivity().setResult(RESULT_OK);
                 }
+
             }
         };
 
         @Override
         public void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
-            addPreferencesFromResource(R.xml.preference);
+            addPreferencesFromResource(R.xml.settings_preference);
+
+            //ライセンス情報をクリックしたら別Activityを開く
+            Preference preference = findPreference(getString(R.string.key_license));
+            if(preference != null) {
+                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(final Preference preference) {
+                        Intent i = new Intent(getActivity(), LicenseActivity.class);
+                        startActivity(i);
+                        return true;
+                    }
+                });
+            }
 
             ListAdapter adapter = getPreferenceScreen().getRootAdapter();
             for(int i=0; i<adapter.getCount();i++){

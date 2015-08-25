@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
@@ -215,7 +214,7 @@ public class MainActivity extends ActionBarActivity
 
     private void startSettingsActivity(){
         Intent i = new Intent(this,SettingsActivity.class);
-        startActivityForResult(i,REQUEST_CODE_SETTINGS);
+        startActivityForResult(i, REQUEST_CODE_SETTINGS);
     }
 
 

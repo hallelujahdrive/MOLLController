@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="license_title">
+        <item>@string/title_open_source_license</item>
+        <item>@string/title_creative_commons_license</item>
+    </string-array>
+</resources>

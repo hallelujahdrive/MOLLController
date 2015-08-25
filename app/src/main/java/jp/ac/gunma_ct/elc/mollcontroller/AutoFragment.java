@@ -272,11 +272,12 @@ public class AutoFragment extends Fragment {
         }
     }
 
+    //非推奨メソッドだけど、何故かonAttach(Context context)を呼ぶとバグる
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        ((MainActivity) context).onSectionAttached(
-                getArguments().getInt(ARG_SECTION_NUMBER));
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+                ((MainActivity) activity).onSectionAttached(
+                        getArguments().getInt(ARG_SECTION_NUMBER));
     }
 
     @Override

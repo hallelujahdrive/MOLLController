@@ -3,4 +3,6 @@
     <string name="key_scan_period">SCAN_PERIOD</string>
     <string name="key_interval">INTERVAL</string>
     <string name="key_license">LICENSE</string>
+    <string name="key_open_source_license">OPEN_SOURCE_LICENSE</string>
+    <string name="key_creative_commons_license">CREATIVE_COMMONS_LICENSE</string>
 </resources>
