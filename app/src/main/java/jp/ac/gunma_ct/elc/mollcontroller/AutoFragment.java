@@ -242,8 +242,8 @@ public class AutoFragment extends Fragment {
 
     private String getDistance(int rssi){
         //定数
-        double a = 10;
-        double b = 100;
+        double a = -70;
+        double b = 3.5;
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         //numberFormat.setMaximumFractionDigits(1);
 
