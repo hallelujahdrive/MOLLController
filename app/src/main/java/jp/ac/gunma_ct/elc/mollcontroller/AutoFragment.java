@@ -20,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+
 /**
  * Created by Chiharu on 2015/08/14.
  */
@@ -175,6 +177,8 @@ public class AutoFragment extends Fragment {
                                 public void run() {
                                     //信号強度の表示
                                     mRssiTextView.setText(String.valueOf(rssi));
+                                    //距離の表示
+                                    mDistanceTextView.setText(getDistance(rssi));
                                 }
                             });
                         }
@@ -234,6 +238,19 @@ public class AutoFragment extends Fragment {
                     break;
                 }
         }
+    }
+
+    private String getDistance(int rssi){
+        //定数
+        double a = 10;
+        double b = 100;
+        NumberFormat numberFormat = NumberFormat.getNumberInstance();
+        //numberFormat.setMaximumFractionDigits(1);
+
+        double distance = Math.pow(10,(a-rssi)/(10*b));
+
+        return numberFormat.format(distance);
+
     }
 
     @Override

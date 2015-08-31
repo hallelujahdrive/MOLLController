@@ -27,8 +27,8 @@ import android.widget.LinearLayout;
 public class MainActivity extends ActionBarActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
-    private static final int REQUEST_CODE_SETTINGS = 0;
     private static final int REQUEST_ENABLE_BT = 0;
+    private static final int REQUEST_CODE_SETTINGS = 1;
 
     private static final int VALUE_DEFAULT_SCAN_PERIOD = 10;
     private static final int VALUE_DEFAULT_INTERVAL = 1000;
@@ -96,6 +96,8 @@ public class MainActivity extends ActionBarActivity
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
+
+        //シグナルハンドラ
     }
 
     @Override
@@ -181,6 +183,12 @@ public class MainActivity extends ActionBarActivity
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
+            case REQUEST_ENABLE_BT:
+                //終了
+                if(resultCode == Activity.RESULT_CANCELED){
+                    finish();
+                }
+                break;
             case REQUEST_CODE_SETTINGS:
                 switch (resultCode){
                     case Activity.RESULT_OK:
