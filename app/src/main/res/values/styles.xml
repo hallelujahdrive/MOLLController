@@ -8,6 +8,7 @@
         <item name="colorPrimary">@color/material_red_500</item>
         <item name="colorPrimaryDark">@color/material_red_700</item>
         <item name="menuItemViewStyle">@style/MenuItemView</item>
+        <item name="circleButtonStyle">@style/CircleButton</item>
     </style>
 
     <style name="MenuItemView" parent="@android:style/TextAppearance.Widget.TextView">
@@ -26,6 +27,14 @@
     <style name="CardViewRaisedButtonButton" parent="Base.Widget.AppCompat.Button" >
         <item name="android:background">@drawable/btn_in_cardview_mtrl_shape</item>
         <item name="android:textColor">?attr/colorAccent</item>
+    </style>
+
+
+    <style name="CircleButton" parent="Widget.AppCompat.Button.Borderless" >
+        <item name="android:minWidth">56dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:background">@drawable/btn_circle_shape</item>
+        <item name="android:tint">?android:textColorSecondary</item>
     </style>
 
 </resources>

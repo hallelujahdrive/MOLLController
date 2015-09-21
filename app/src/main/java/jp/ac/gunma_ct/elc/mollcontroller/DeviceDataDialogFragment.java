@@ -1,7 +1,6 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
 import android.app.Activity;
-import android.app.DialogFragment;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,7 +13,7 @@ import android.widget.TextView;
 /**
  * Created by Sakai on 2015/06/29.
  */
-public class DeviceDataDialogFragment extends DialogFragment {
+public class DeviceDataDialogFragment extends BaseDialogFragment {
 
     private static final String ARG_ID="ID";
     private static final String ARG_DEVICE="DEVICE";
@@ -36,7 +35,9 @@ public class DeviceDataDialogFragment extends DialogFragment {
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState){
 
-        final BluetoothDevice device=getArguments().getParcelable(ARG_DEVICE);
+        mListener = (OnDialogInteractionListener) getTargetFragment();
+        
+        final BluetoothDevice device = getArguments().getParcelable(ARG_DEVICE);
 
         final AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
 
@@ -78,8 +79,8 @@ public class DeviceDataDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 Intent i = new Intent();
                 i.putExtra(ARG_ID,getArguments().getInt(ARG_ID));
-                i.putExtra(ARG_DEVICE,device);
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,i);
+                i.putExtra(ARG_DEVICE, device);
+                mListener.onDialogResult(getTargetRequestCode(), RESULT_OK, i);
             }
         }).setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
             //ダイアログを閉じる

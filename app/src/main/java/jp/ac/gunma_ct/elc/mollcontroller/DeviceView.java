@@ -68,6 +68,14 @@ public class DeviceView extends GridLayout {
         a.recycle();
     }
 
+    public void setTitle(int resouurceId){
+        mTitleTextView.setText(resouurceId);
+    }
+
+    public void setTitle(String title){
+        mTitleTextView.setText(title);
+    }
+
     public void setConnectionStatus(boolean connected){
         Drawable icon;
         int id;
@@ -90,9 +98,14 @@ public class DeviceView extends GridLayout {
 
     public void setBluetoothDevice(BluetoothDevice device){
         mDevice = device;
-        mNameView.setText(mDevice.getName());
         //switchを有効に
         mConnectionSwitch.setEnabled(true);
+        mNameView.setText(mDevice.getName());
+    }
+
+    public void setBluetoothDevice(BluetoothDevice device,boolean isConnected){
+        setBluetoothDevice(device);
+        setConnectionStatus(isConnected);
     }
 
     @Nullable

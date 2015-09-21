@@ -4,4 +4,12 @@
         <item name="android:background">@drawable/btn_in_cardview_mtrl</item>
         <item name="android:textColor">?attr/colorAccent</item>
     </style>
+
+    <style name="CircleButton" parent="Widget.AppCompat.Button.Borderless" >
+        <item name="android:minWidth">56dp</item>
+        <item name="android:minHeight">56dp</item>
+        <item name="android:background">@drawable/btn_circle</item>
+        <item name="android:tint">?android:textColorSecondary</item>
+        <item name="android:translationZ">0dp</item>
+    </style>
 </resources>

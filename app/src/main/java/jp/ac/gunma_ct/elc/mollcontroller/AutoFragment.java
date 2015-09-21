@@ -1,20 +1,17 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,24 +22,7 @@ import java.text.NumberFormat;
 /**
  * Created by Chiharu on 2015/08/14.
  */
-public class AutoFragment extends Fragment {
-
-    private static final String ARG_SECTION_NUMBER = "SELECTION_NUMBER";
-
-    private static final String ARG_ID = "ID";
-    private static final String ARG_DEVICE = "DEVICE";
-
-    private static final String TAG_DEVICE_LIST = "DEVICE_LIST";
-    private static final String TAG_RESCAN = "RESCAN";
-    private static final String TAG_DEVICE_DATA = "DEVICE_DATA";
-
-    private static final int REQUEST_CODE_LIST = 0;
-    private static final int REQUEST_CODE_RESCAN = 1;
-    private static final int REQUEST_CODE_DATA = 2;
-
-    private static final int DEFAULT_INTERVAL = 1000;
-
-    private static Handler handler = new Handler();
+public class AutoFragment extends BaseFragment {
 
     private DeviceView mMollDeviceView;
     private DeviceView mTagDeviceView;
@@ -55,8 +35,6 @@ public class AutoFragment extends Fragment {
 
     private BluetoothGatt mMollBluetoothGatt;
     private BluetoothGatt mTagBluetoothGatt;
-
-    private long mInterval;
 
     public static AutoFragment newInstance(int sectionNumber) {
         AutoFragment fragment = new AutoFragment();
@@ -74,6 +52,10 @@ public class AutoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //フルスクリーンの解除
+        getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+
         //更新間隔の設定
         setInterval();
 
@@ -131,15 +113,6 @@ public class AutoFragment extends Fragment {
         return rootView;
     }
 
-    private void openDeviceListDialog(int id) {
-        //多重起動の防止
-        if(getFragmentManager().findFragmentByTag(TAG_DEVICE_LIST) == null) {
-            DeviceListDialogFragment dialogFragment = DeviceListDialogFragment.newInstance(id);
-            dialogFragment.setTargetFragment(this, REQUEST_CODE_LIST);
-            dialogFragment.show(getFragmentManager(), TAG_DEVICE_LIST);
-        }
-    }
-
     private void connectGatt(int id,BluetoothDevice device){
         switch (id){
             case R.id.moll_device_view:
@@ -165,8 +138,6 @@ public class AutoFragment extends Fragment {
                     mTagBluetoothGatt = mTagDeviceView.getBluetoothDevice().connectGatt(getActivity(), false, new BluetoothGattCallback() {
                         @Override
                         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
-                            super.onConnectionStateChange(gatt, status, newState);
-
                             connectionStateChange(mTagDeviceView, newState);
                         }
 
@@ -247,69 +218,34 @@ public class AutoFragment extends Fragment {
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         //numberFormat.setMaximumFractionDigits(1);
 
-        double distance = Math.pow(10,(a-rssi)/(10*b));
+        double distance = Math.pow(10, (a - rssi) / (10 * b));
 
         return numberFormat.format(distance);
-
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onDialogResult(int requestCode, int resultCode, Intent data) {
+        super.onDialogResult(requestCode, resultCode, data);
         Bundle extras = data.getExtras();
-        switch (requestCode){
-            case REQUEST_CODE_LIST:
-                if(resultCode == Activity.RESULT_OK) {
-                    //DeviceDialogを開く
-                    //多重起動の防止
-                    if (getFragmentManager().findFragmentByTag(TAG_DEVICE_DATA) == null) {
-                        DeviceDataDialogFragment dialogFragment = DeviceDataDialogFragment.newInstance(extras.getInt(ARG_ID), (BluetoothDevice) extras.getParcelable(ARG_DEVICE));
-                        dialogFragment.setTargetFragment(this, REQUEST_CODE_DATA);
-                        dialogFragment.show(getFragmentManager(), TAG_DEVICE_DATA);
-                    }
-                }else{
-                    //RescanDialogを開く
-                    //多重起動の防止
-                    if(getFragmentManager().findFragmentByTag(TAG_RESCAN) == null){
-                        RescanDialogFragment dialogFragment = RescanDialogFragment.newInstance(extras.getInt(ARG_ID));
-                        dialogFragment.setTargetFragment(this, REQUEST_CODE_RESCAN);
-                        dialogFragment.show(getFragmentManager(), TAG_RESCAN);
-                    }
-                }
-                break;
-            case REQUEST_CODE_RESCAN:
-                if(resultCode == Activity.RESULT_OK){
-                    openDeviceListDialog(extras.getInt(ARG_ID));
-                }
-                break;
-            case REQUEST_CODE_DATA:
-                if(resultCode == Activity.RESULT_OK){
+        switch (requestCode) {
+            case REQUEST_CODE_DEVICE_DATA:
+                if (resultCode == BaseDialogFragment.RESULT_OK) {
                     connectGatt(extras.getInt(ARG_ID), (BluetoothDevice) extras.getParcelable(ARG_DEVICE));
                 }
                 break;
         }
     }
 
-    //非推奨メソッドだけど、何故かonAttach(Context context)を呼ぶとバグる
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-                ((MainActivity) activity).onSectionAttached(
-                        getArguments().getInt(ARG_SECTION_NUMBER));
-    }
-
     @Override
     public void onDetach(){
         super.onDetach();
-        if(mMollBluetoothGatt!=null){
+        if(mMollBluetoothGatt != null){
             mMollBluetoothGatt.disconnect();
+            mMollBluetoothGatt = null;
         }
-        if(mTagBluetoothGatt!=null){
+        if(mTagBluetoothGatt != null){
             mTagBluetoothGatt.disconnect();
+            mTagBluetoothGatt = null;
         }
-    }
-
-    public void setInterval(){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mInterval = sp.getInt(getString(R.string.key_interval),DEFAULT_INTERVAL);
     }
 }

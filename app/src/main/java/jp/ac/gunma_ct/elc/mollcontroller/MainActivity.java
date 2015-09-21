@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
@@ -97,7 +98,6 @@ public class MainActivity extends ActionBarActivity
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        //シグナルハンドラ
     }
 
     @Override
@@ -146,9 +146,18 @@ public class MainActivity extends ActionBarActivity
 
     public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(mTitle);
+        if (actionBar != null) {
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setTitle(mTitle);
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration configuration){
+        super.onConfigurationChanged(configuration);
+
+        //タイトルの再設定
+        restoreActionBar();
     }
 
     @Override
@@ -157,7 +166,7 @@ public class MainActivity extends ActionBarActivity
             // Only show items in the action bar relevant to this screen
             // if the drawer is not showing. Otherwise, let the drawer
             // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
+            //getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
         }

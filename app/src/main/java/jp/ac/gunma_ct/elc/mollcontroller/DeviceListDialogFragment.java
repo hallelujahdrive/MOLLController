@@ -27,12 +27,9 @@ import java.util.HashSet;
 /**
  * Created by Sakai on 2015/06/22.
  */
-public class DeviceListDialogFragment extends DialogFragment {
+public class DeviceListDialogFragment extends BaseDialogFragment {
 
     private static final int DEFAULT_SCAN_PERIOD = 10;
-
-    private static final String ARG_ID ="ID";
-    private static final String ARG_DEVICE = "DEVICE";
 
     private ListView mListView;
     private View mHeaderView;
@@ -56,6 +53,8 @@ public class DeviceListDialogFragment extends DialogFragment {
 
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState){
+
+        mListener = (OnDialogInteractionListener) getTargetFragment();
 
         //スキャン時間の設定
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -82,7 +81,7 @@ public class DeviceListDialogFragment extends DialogFragment {
                 Intent i = new Intent();
                 i.putExtra(ARG_ID,getArguments().getInt(ARG_ID));
                 i.putExtra(ARG_DEVICE,adapter.getItem(position - (mScanning ? 1 : 0)));
-                getTargetFragment().onActivityResult(getTargetRequestCode(),Activity.RESULT_OK,i);
+                mListener.onDialogResult(getTargetRequestCode(), RESULT_OK,i);
                 dismiss();
             }
         });
@@ -138,7 +137,7 @@ public class DeviceListDialogFragment extends DialogFragment {
         if(mListView.getCount() == 0){
             Intent i = new Intent();
             i.putExtra(ARG_ID, getArguments().getInt(ARG_ID));
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED,i );
+            mListener.onDialogResult(getTargetRequestCode(), RESULT_CANCELED,i );
             dismiss();
         }
     }
@@ -176,9 +175,6 @@ public class DeviceListDialogFragment extends DialogFragment {
 
             ((MenuItemView) convertView).setText(device.getName());
             ((MenuItemView) convertView).setIcon(getResources().getDrawable(R.drawable.ic_action_bluetooth));
-
-            //追加アニメーション
-            //convertView.startAnimation(AnimationUtils.loadAnimation(getContext(),R.anim.add_animation));
 
             return convertView;
         }

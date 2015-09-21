@@ -18,8 +18,9 @@
         <attr name="unit" format="string|reference" />
     </declare-styleable>
 
-    <attr name="deviceViewStyle" format="integer|reference" />
-    <attr name="menuItemViewStyle" format="integer|reference"/>
-    <attr name="seekBarPreferenceStyle" format="integer|reference" />
+    <attr name="deviceViewStyle" format="reference" />
+    <attr name="menuItemViewStyle" format="reference"/>
+    <attr name="circleButtonStyle" format="reference" />
+    <attr name="seekBarPreferenceStyle" format="reference" />
 
 </resources>
