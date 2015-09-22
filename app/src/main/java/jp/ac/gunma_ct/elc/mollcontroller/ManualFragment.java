@@ -116,10 +116,8 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
                     case BaseDialogFragment.RESULT_FIRST_USER + DeviceViewDialogFragment.RESULT_CHECKED_CHANGED:
                         if(extras.getBoolean(ARG_IS_CHECKED)){
                             mBluetoothGatt.connect();
-                            System.out.println("目覚めた心は走りだした");
                         }else{
                             mBluetoothGatt.disconnect();
-                            System.out.println("マミった");
                         }
                         break;
                     case BaseDialogFragment.RESULT_FIRST_USER + DeviceViewDialogFragment.RESULT_BUTTON_CLICK:
@@ -180,7 +178,6 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
     }
 
     private void connectGatt(BluetoothDevice device){
-        //デバイス名の表示
         mDevice = device;
         //接続
         mBluetoothGatt = mDevice.connectGatt(getActivity(), false, new BluetoothGattCallback() {
@@ -242,17 +239,6 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
                         }
                     }
                 });
-            }
-
-            @Override
-            public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                System.out.println(characteristic.toString());
-            }
-
-
-            @Override
-            public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
-                System.out.println(characteristic.getUuid().toString());
             }
         });
     }

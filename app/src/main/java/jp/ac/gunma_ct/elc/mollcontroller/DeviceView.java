@@ -113,7 +113,7 @@ public class DeviceView extends GridLayout {
         return mDevice;
     }
 
-    public boolean getConnected(){
+    public boolean getConnectedStatus(){
         return mConnected;
     }
 
