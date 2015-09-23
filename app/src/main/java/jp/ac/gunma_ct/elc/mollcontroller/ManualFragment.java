@@ -236,6 +236,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
                             setButtonsEnabled(true);
                         } else {
                             Toast.makeText(getActivity(), R.string.message_fault, Toast.LENGTH_LONG).show();
+                            mBluetoothGatt.discoverServices();
                         }
                     }
                 });
