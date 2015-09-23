@@ -83,21 +83,21 @@ public class MainActivity extends ActionBarActivity
                 (DrawerLayout) findViewById(R.id.drawer_layout),
                 point);
 
-        //青葉なかったら終了な
+        //青歯なかったら終了な
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-            NoBluetoothDialog dialogFragment=new NoBluetoothDialog();
+            NoBluetoothDialog dialogFragment = new NoBluetoothDialog();
             dialogFragment.show(getFragmentManager(), TAG_NO_BLUETOOTH);
+        } else {
+            //青歯があったら続行
+            final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(getApplicationContext().BLUETOOTH_SERVICE);
+            mBluetoothAdapter = bluetoothManager.getAdapter();
+
+            //青歯無効だったら有効にさせる
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            }
         }
-
-        final BluetoothManager bluetoothManager=(BluetoothManager)getSystemService(getApplicationContext().BLUETOOTH_SERVICE);
-        mBluetoothAdapter = bluetoothManager.getAdapter();
-
-        //青歯無効だったら有効にさせる
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
     }
 
     @Override
