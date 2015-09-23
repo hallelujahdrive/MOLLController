@@ -32,7 +32,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
     //回転角度(暫定)
     private static final double MAX_DEG = Math.PI/3;
     //到達時のRSSIの閾値
-    private static final int RSSI_THRISHOLD = -40;
+    private static final int RSSI_THRESHOLD = -40;
 
     private DeviceView mMollDeviceView;
     private DeviceView mTagDeviceView;
@@ -298,7 +298,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
     private void writeCharacteristic(int rssi){
         byte command;
 
-        if(rssi < RSSI_THRISHOLD) {
+        if(rssi < RSSI_THRESHOLD) {
             if (mRssi == 0 || rssi >= mRssi) {
                 command = FORWARD;
             } else {
