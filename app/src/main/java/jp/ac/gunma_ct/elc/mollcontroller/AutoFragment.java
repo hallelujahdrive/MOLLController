@@ -7,11 +7,13 @@ import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,8 +33,10 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
 
     //回転角度(暫定)
     private static final double MAX_DEG = Math.PI/3;
-    //到達時のRSSIの閾値
-    private static final int RSSI_THRESHOLD = -40;
+
+    //デフォルトの値
+    private static final int DEFAULT_INTERVAL = 1000;
+    private static final int DEFAULT_THRESHOLD = -40;
 
     private DeviceView mMollDeviceView;
     private DeviceView mTagDeviceView;
@@ -48,6 +52,10 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
     private BluetoothGatt mTagBluetoothGatt;
 
     private SensorManager mSensorManager;
+
+    //更新間隔
+    private long mInterval;
+    private int mThreshold;
 
     private int mRssi = 0;
 
@@ -78,7 +86,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //更新間隔の設定
-        setInterval();
+        setSettings();
 
         //SensorManagerの取得
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -283,6 +291,13 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
         }
     }
 
+    //設定の読み込み
+    public void setSettings(){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mInterval = sp.getInt(getString(R.string.key_interval),DEFAULT_INTERVAL);
+        mThreshold = sp.getInt(getString(R.string.key_threshold),DEFAULT_THRESHOLD);
+    }
+
     private String getDistance(int rssi){
         //定数
         double a = -70;
@@ -298,7 +313,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
     private void writeCharacteristic(int rssi){
         byte command;
 
-        if(rssi < RSSI_THRESHOLD) {
+        if(rssi < mThreshold) {
             if (mRssi == 0 || rssi >= mRssi) {
                 command = FORWARD;
             } else {

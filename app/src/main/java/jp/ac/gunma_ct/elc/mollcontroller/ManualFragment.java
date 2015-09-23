@@ -56,9 +56,6 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         //フルスクリーンに
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        //更新間隔の設定
-        setInterval();
-
         View view = inflater.inflate(R.layout.fragment_manual, container, false);
 
         FloatingActionButton settingsButton = (FloatingActionButton) view.findViewById(R.id.settings_button);

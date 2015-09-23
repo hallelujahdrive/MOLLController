@@ -16,6 +16,13 @@
             app:max="@integer/interval_max"
             app:magnification="@integer/interval_magnification"
             app:unit="@string/unit_milli_second" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_threshold"
+            android:title="@string/title_threshold"
+            app:min="@integer/threshold_min"
+            app:max="@integer/threshold_max"
+            app:magnification="@integer/threshold_magnification"
+            app:unit="@string/unit_decibel" />
     </PreferenceCategory>
     <PreferenceCategory>
         <Preference

@@ -30,8 +30,6 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected static final int REQUEST_CODE_RESCAN = 1;
     protected static final int REQUEST_CODE_DEVICE_DATA = 2;
 
-    protected static final int DEFAULT_INTERVAL = 1000;
-
     protected static final byte STOP = 0;
     protected static final byte FORWARD = 1;
     protected static final byte BACK = 2;
@@ -50,8 +48,6 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected BluetoothGattCharacteristic mTxCharacteristic;
 
     protected static Handler handler = new Handler();
-
-    protected long mInterval;
 
     @Override
     public void onDialogResult(int requestCode, int resultCode, Intent data) {
@@ -99,10 +95,5 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
             dialogFragment.setTargetFragment(this, REQUEST_CODE_DEVICE_LIST);
             dialogFragment.show(getFragmentManager(), TAG_DEVICE_LIST);
         }
-    }
-
-    protected void setInterval(){
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mInterval = sp.getInt(getString(R.string.key_interval),DEFAULT_INTERVAL);
     }
 }

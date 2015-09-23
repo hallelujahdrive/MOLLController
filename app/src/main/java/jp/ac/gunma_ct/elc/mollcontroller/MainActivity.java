@@ -33,6 +33,7 @@ public class MainActivity extends ActionBarActivity
 
     private static final int VALUE_DEFAULT_SCAN_PERIOD = 10;
     private static final int VALUE_DEFAULT_INTERVAL = 1000;
+    private static final int VALUE_DEFAULT_THRESHOLD = -40;
 
     private static final String KEY_PREFERENCE_EXIST = "PREFERENCE_EXIST";
 
@@ -204,7 +205,7 @@ public class MainActivity extends ActionBarActivity
                         //Intervalの更新
                         android.app.Fragment fragment = getFragmentManager().findFragmentByTag(TAG_AUTO);
                         if(fragment != null){
-                            ((AutoFragment)fragment).setInterval();
+                            ((AutoFragment)fragment).setSettings();
                         }
                 }
                 break;
@@ -224,6 +225,7 @@ public class MainActivity extends ActionBarActivity
         editor.putBoolean(KEY_PREFERENCE_EXIST,true);
         editor.putInt(getString(R.string.key_scan_period), VALUE_DEFAULT_SCAN_PERIOD);
         editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
+        editor.putInt(getString(R.string.key_threshold), VALUE_DEFAULT_THRESHOLD);
 
         //ﾁｮｹﾞﾌﾟﾙｨｨｨｨ
         editor.apply();
