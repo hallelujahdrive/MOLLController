@@ -125,7 +125,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                         //接続失敗
                         mMollDeviceView.setConnectionStatus(false);
                     }
-                } else {
+                } else if(mMollBluetoothGatt != null){
                     mMollBluetoothGatt.disconnect();
                 }
             }
@@ -138,7 +138,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                         //接続失敗
                         mTagDeviceView.setConnectionStatus(false);
                     }
-                } else {
+                } else if (mTagBluetoothGatt != null){
                     mTagBluetoothGatt.disconnect();
                 }
             }
@@ -248,7 +248,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        while (mTagDeviceView.getConnectedStatus()) {
+                                        while (mTagDeviceView.getConnectedStatus() && !mDestroyed) {
                                             mTagBluetoothGatt.readRemoteRssi();
                                             try {
                                                 Thread.sleep(mInterval);
@@ -270,14 +270,14 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                 }
                 break;
             case BluetoothProfile.STATE_DISCONNECTED:
-                if(getActivity()!=null) {
+                if(!mDestroyed) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
                             //切断
                             deviceView.setConnectionStatus(false);
                             //StatusLayoutの削除
-                            if(deviceView == mTagDeviceView && mStatusLayout.getParent() != null) {
+                            if (deviceView == mTagDeviceView && mStatusLayout.getParent() != null) {
                                 mTagDeviceLayout.removeView(mStatusLayout);
                             }
                             //メッセージ表示
@@ -286,8 +286,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                             mSearchButton.setEnabled(false);
                         }
                     });
-                    break;
                 }
+                break;
         }
     }
 

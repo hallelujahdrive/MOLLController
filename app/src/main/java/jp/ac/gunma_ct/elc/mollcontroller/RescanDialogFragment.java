@@ -10,7 +10,7 @@ import android.os.Bundle;
 /**
  * Created by Chiharu on 2015/08/23.
  */
-public class RescanDialogFragment extends DialogFragment {
+public class RescanDialogFragment extends BaseDialogFragment {
 
     private static final String ARG_ID ="ID";
 
@@ -27,6 +27,8 @@ public class RescanDialogFragment extends DialogFragment {
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState){
 
+        mListener = (OnDialogInteractionListener) getTargetFragment();
+
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         //メッセージ
@@ -37,7 +39,7 @@ public class RescanDialogFragment extends DialogFragment {
             public void onClick(DialogInterface dialog, int which) {
                 Intent i = new Intent();
                 i.putExtra(ARG_ID,getArguments().getInt(ARG_ID));
-                getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,i);
+                mListener.onDialogResult(getTargetRequestCode(), RESULT_OK,i);
             }
         }).setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
             @Override

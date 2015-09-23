@@ -150,7 +150,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
 
         //コマンドの送信
         if (mTxCharacteristic != null){
-            mTxCharacteristic.setValue(new byte[] {command});
+            mTxCharacteristic.setValue(new byte[]{command});
             mBluetoothGatt.writeCharacteristic(mTxCharacteristic);
         }
     }
@@ -209,21 +209,23 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
                         break;
                     case BluetoothProfile.STATE_DISCONNECTED:
                         mConnected = false;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                setButtonsEnabled(false);
-                                //Toastの表示
-                                if(getActivity() != null) {
-                                    Toast.makeText(getActivity(), R.string.message_disconnected, Toast.LENGTH_LONG).show();
-                                    //DeviceViewDialogへ反映
-                                    DeviceViewDialogFragment dialogFragment = (DeviceViewDialogFragment) getFragmentManager().findFragmentByTag(TAG_DEVICE_VIEW);
-                                    if (dialogFragment != null) {
-                                        dialogFragment.setConnectionStatus(false);
+                        if(!mDestroyed) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setButtonsEnabled(false);
+                                    //Toastの表示
+                                    if (getActivity() != null) {
+                                        Toast.makeText(getActivity(), R.string.message_disconnected, Toast.LENGTH_LONG).show();
+                                        //DeviceViewDialogへ反映
+                                        DeviceViewDialogFragment dialogFragment = (DeviceViewDialogFragment) getFragmentManager().findFragmentByTag(TAG_DEVICE_VIEW);
+                                        if (dialogFragment != null) {
+                                            dialogFragment.setConnectionStatus(false);
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                         break;
                 }
             }

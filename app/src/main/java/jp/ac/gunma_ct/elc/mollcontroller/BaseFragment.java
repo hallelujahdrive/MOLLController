@@ -49,6 +49,8 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
 
     protected static Handler handler = new Handler();
 
+    protected boolean mDestroyed = false;
+
     @Override
     public void onDialogResult(int requestCode, int resultCode, Intent data) {
         Bundle extras = data.getExtras();
@@ -86,6 +88,14 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
         super.onAttach(context);
         ((MainActivity) context).onSectionAttached(
                 getArguments().getInt(ARG_SECTION_NUMBER));
+    }
+
+    @Override
+    public void onDestroy(){
+        //殺しにかかる
+        mDestroyed = true;
+
+        super.onDestroy();
     }
 
     protected void openDeviceListDialog(int id) {
