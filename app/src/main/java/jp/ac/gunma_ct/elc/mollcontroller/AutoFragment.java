@@ -248,7 +248,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                                 new Thread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        while (mTagDeviceView.getConnectedStatus() && !mDestroyed) {
+                                        while (deviceView.getConnectedStatus() && !mDestroyed) {
                                             mTagBluetoothGatt.readRemoteRssi();
                                             try {
                                                 Thread.sleep(mInterval);
@@ -267,6 +267,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                             }
                         }
                     });
+                }else{
+                    mMollBluetoothGatt.discoverServices();
                 }
                 break;
             case BluetoothProfile.STATE_DISCONNECTED:
