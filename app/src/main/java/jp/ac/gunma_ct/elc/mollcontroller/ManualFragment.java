@@ -29,7 +29,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
     protected static final int REQUEST_CODE_DEVICE_VIEW = 3;
 
     private ImageButton mStopButton;
-    private ImageButton mForwarfButton;
+    private ImageButton mForwardButton;
     private ImageButton mBackButton;
     private ImageButton mLeftButton;
     private ImageButton mRightButton;
@@ -61,7 +61,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         FloatingActionButton settingsButton = (FloatingActionButton) view.findViewById(R.id.settings_button);
 
         mStopButton = (ImageButton) view.findViewById(R.id.stop_button);
-        mForwarfButton = (ImageButton) view.findViewById(R.id.forward_button);
+        mForwardButton = (ImageButton) view.findViewById(R.id.forward_button);
         mBackButton = (ImageButton) view.findViewById(R.id.back_button);
         mLeftButton = (ImageButton) view.findViewById(R.id.left_button);
         mRightButton = (ImageButton) view.findViewById(R.id.right_button);
@@ -86,7 +86,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         setButtonsEnabled(false);
 
         mStopButton.setOnClickListener(this);
-        mForwarfButton.setOnClickListener(this);
+        mForwardButton.setOnClickListener(this);
         mBackButton.setOnClickListener(this);
         mLeftButton.setOnClickListener(this);
         mRightButton.setOnClickListener(this);
@@ -254,7 +254,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
 
     private void setButtonsEnabled(boolean enabled){
         mStopButton.setEnabled(enabled);
-        mForwarfButton.setEnabled(enabled);
+        mForwardButton.setEnabled(enabled);
         mBackButton.setEnabled(enabled);
         mLeftButton.setEnabled(enabled);
         mRightButton.setEnabled(enabled);
@@ -264,7 +264,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         //Lollipop以前の時,Tintが使えないのでこうする
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             setButtonTint(mStopButton, enabled);
-            setButtonTint(mForwarfButton, enabled);
+            setButtonTint(mForwardButton, enabled);
             setButtonTint(mBackButton, enabled);
             setButtonTint(mLeftButton, enabled);
             setButtonTint(mRightButton, enabled);
