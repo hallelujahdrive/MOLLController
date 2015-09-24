@@ -3,11 +3,11 @@ package jp.ac.gunma_ct.elc.mollcontroller;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.BluetoothProfile;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
@@ -16,8 +16,6 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
-import java.util.UUID;
 
 /**
  * Created by Chiharu on 2015/08/14.
@@ -58,9 +56,6 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         //フルスクリーンに
         getActivity().getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        //更新間隔の設定
-        setInterval();
-
         View view = inflater.inflate(R.layout.fragment_manual, container, false);
 
         FloatingActionButton settingsButton = (FloatingActionButton) view.findViewById(R.id.settings_button);
@@ -72,9 +67,6 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         mRightButton = (ImageButton) view.findViewById(R.id.right_button);
         mTurnLeftButton = (ImageButton) view.findViewById(R.id.turn_left_button);
         mTurnRightButton = (ImageButton) view.findViewById(R.id.turn_right_button);
-
-        //最初はボタンは全部無効
-        setButtonsEnabled(false);
 
         //Listenerの登録
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -89,6 +81,9 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
                 }
             }
         });
+
+        //最初はボタンは全部無効
+        setButtonsEnabled(false);
 
         mStopButton.setOnClickListener(this);
         mForwarfButton.setOnClickListener(this);
@@ -155,7 +150,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
 
         //コマンドの送信
         if (mTxCharacteristic != null){
-            mTxCharacteristic.setValue(new byte[] {command});
+            mTxCharacteristic.setValue(new byte[]{command});
             mBluetoothGatt.writeCharacteristic(mTxCharacteristic);
         }
     }
@@ -167,6 +162,17 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
             mBluetoothGatt.disconnect();
             mBluetoothGatt = null;
         }
+    }
+
+    //ImageButtonのtint(<Lollipop)
+    private void setButtonTint(ImageButton imageButton, boolean enabled){
+        int tintColor;
+        if(enabled){
+            tintColor = getResources().getColor(R.color.secondary_text_default_material_light);
+        }else{
+            tintColor = getResources().getColor(R.color.secondary_text_disabled_material_light);
+        }
+        imageButton.getDrawable().setColorFilter(tintColor, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void openDeviceViewDialog(){
@@ -203,21 +209,23 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
                         break;
                     case BluetoothProfile.STATE_DISCONNECTED:
                         mConnected = false;
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                setButtonsEnabled(false);
-                                //Toastの表示
-                                if(getActivity() != null) {
-                                    Toast.makeText(getActivity(), R.string.message_disconnected, Toast.LENGTH_LONG).show();
-                                    //DeviceViewDialogへ反映
-                                    DeviceViewDialogFragment dialogFragment = (DeviceViewDialogFragment) getFragmentManager().findFragmentByTag(TAG_DEVICE_VIEW);
-                                    if (dialogFragment != null) {
-                                        dialogFragment.setConnectionStatus(false);
+                        if(!mDestroyed) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setButtonsEnabled(false);
+                                    //Toastの表示
+                                    if (getActivity() != null) {
+                                        Toast.makeText(getActivity(), R.string.message_disconnected, Toast.LENGTH_LONG).show();
+                                        //DeviceViewDialogへ反映
+                                        DeviceViewDialogFragment dialogFragment = (DeviceViewDialogFragment) getFragmentManager().findFragmentByTag(TAG_DEVICE_VIEW);
+                                        if (dialogFragment != null) {
+                                            dialogFragment.setConnectionStatus(false);
+                                        }
                                     }
                                 }
-                            }
-                        });
+                            });
+                        }
                         break;
                 }
             }
@@ -252,5 +260,16 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         mRightButton.setEnabled(enabled);
         mTurnLeftButton.setEnabled(enabled);
         mTurnRightButton.setEnabled(enabled);
+
+        //Lollipop以前の時,Tintが使えないのでこうする
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            setButtonTint(mStopButton, enabled);
+            setButtonTint(mForwarfButton, enabled);
+            setButtonTint(mBackButton, enabled);
+            setButtonTint(mLeftButton, enabled);
+            setButtonTint(mRightButton, enabled);
+            setButtonTint(mTurnLeftButton, enabled);
+            setButtonTint(mTurnRightButton, enabled);
+        }
     }
 }

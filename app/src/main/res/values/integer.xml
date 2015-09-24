@@ -7,4 +7,8 @@
     <integer name="interval_min">10</integer>
     <integer name="interval_max">100</integer>
     <integer name="interval_magnification">10</integer>
+
+    <integer name="threshold_min">30</integer>
+    <integer name="threshold_max">100</integer>
+    <integer name="threshold_magnification">-1</integer>
 </resources>

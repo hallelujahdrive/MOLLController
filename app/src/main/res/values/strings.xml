@@ -21,8 +21,9 @@
 
     <string name="title_activity_settings">設定</string>
 
-    <string name="title_scan_period">スキャン時間</string>
-    <string name="title_interval">更新間隔</string>
+    <string name="title_scan_period">デバイスの検索時間</string>
+    <string name="title_interval">通信強度の更新間隔</string>
+    <string name="title_threshold">探索終了判定の閾値</string>
     <string name="title_license">ライセンス情報</string>
     <string name="title_open_source_license">オープンソースライセンス</string>
     <string name="title_creative_commons_license">クリエイティブ・コモンズ・ライセンス</string>
@@ -54,6 +55,7 @@
 
     <string name="unit_second">秒</string>
     <string name="unit_milli_second">ミリ秒</string>
+    <string name="unit_decibel">dB</string>
 
     <string name="device_type_classic">DEVICE TYPE CLASSIC</string>
     <string name="device_type_le">DEVICE TYPE LE</string>
