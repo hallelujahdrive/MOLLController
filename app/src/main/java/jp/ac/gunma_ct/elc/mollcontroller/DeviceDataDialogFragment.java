@@ -1,6 +1,5 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.DialogInterface;
 import android.content.Intent;

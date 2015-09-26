@@ -29,10 +29,16 @@ import java.text.NumberFormat;
 /**
  * Created by Chiharu on 2015/08/14.
  */
-public class AutoFragment extends BaseFragment implements SensorEventListener{
+public class AutoFragment extends BaseFragment implements SensorEventListener {
+
+    private static final int REQUEST_CODE_SEARCH_START_CONFIRM = 3;
+    private static final int REQUEST_CODE_SEARCH_ABORT_CONFIRM = 4;
+
+    private static final String TAG_SEARCH_START_CONFIRM = "SEARCH_START_CONFIRM";
+    private static final String TAG_SEARCH_ABORT_CONFIRM = "SEARCH_ABORT_CONFIRM";
 
     //回転角度(暫定)
-    private static final double MAX_DEG = Math.PI/3;
+    private static final double MAX_DEG = Math.PI / 3;
 
     //デフォルトの値
     private static final int DEFAULT_INTERVAL = 1000;
@@ -64,7 +70,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
     //センサの呼び出し回数
     private int mCount;
     private boolean register = false;
-    private boolean isSearching = false;
+    private boolean mSearching = false;
 
     public static AutoFragment newInstance(int sectionNumber) {
         AutoFragment fragment = new AutoFragment();
@@ -125,7 +131,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                         //接続失敗
                         mMollDeviceView.setConnectionStatus(false);
                     }
-                } else if(mMollBluetoothGatt != null){
+                } else if (mMollBluetoothGatt != null) {
                     mMollBluetoothGatt.disconnect();
                 }
             }
@@ -138,7 +144,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                         //接続失敗
                         mTagDeviceView.setConnectionStatus(false);
                     }
-                } else if (mTagBluetoothGatt != null){
+                } else if (mTagBluetoothGatt != null) {
                     mTagBluetoothGatt.disconnect();
                 }
             }
@@ -147,20 +153,27 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                registerListener(isSearching = !isSearching);
+
+                if (mSearching) {
+                    //探索中断ダイアログを表示
+                    showSearchAbortConfirmDialog();
+                } else {
+                    //探索開始ダイアログを表示
+                    showSearchStartConfirmDialog();
+                }
             }
         });
 
         return view;
     }
 
-    private void connectGatt(int id,BluetoothDevice device){
-        switch (id){
+    private void connectGatt(int id, BluetoothDevice device) {
+        switch (id) {
             case R.id.moll_device_view:
                 //デバイス名の表示
                 mMollDeviceView.setBluetoothDevice(device);
                 //接続
-                if(mMollDeviceView.getBluetoothDevice() != null) {
+                if (mMollDeviceView.getBluetoothDevice() != null) {
                     mMollBluetoothGatt = mMollDeviceView.getBluetoothDevice().connectGatt(getActivity(), false, new BluetoothGattCallback() {
                         @Override
                         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -181,7 +194,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                                         mMollDeviceView.setConnectionStatus(true);
                                         Toast.makeText(getActivity(), R.string.message_connected, Toast.LENGTH_LONG).show();
                                         //SearchButtonの有効
-                                        if(mTagDeviceView.getConnectedStatus()){
+                                        if (mTagDeviceView.getConnectedStatus()) {
                                             mSearchButton.setEnabled(true);
                                         }
                                     } else {
@@ -199,7 +212,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                 //デバイス名の表示
                 mTagDeviceView.setBluetoothDevice(device);
                 //接続
-                if(mTagDeviceView.getBluetoothDevice()!=null) {
+                if (mTagDeviceView.getBluetoothDevice() != null) {
                     mTagBluetoothGatt = mTagDeviceView.getBluetoothDevice().connectGatt(getActivity(), false, new BluetoothGattCallback() {
                         @Override
                         public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) {
@@ -207,7 +220,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                         }
 
                         @Override
-                        public void onReadRemoteRssi(BluetoothGatt gatt, final int rssi, int status){
+                        public void onReadRemoteRssi(BluetoothGatt gatt, final int rssi, int status) {
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -220,8 +233,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                             });
 
                             //探索中なら書き込み
-                            if(isSearching){
-                                writeCharacteristic(rssi);
+                            if (mSearching) {
+                                setCommand(rssi);
                             }
                         }
                     });
@@ -234,7 +247,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
         switch (newState) {
             case BluetoothProfile.STATE_CONNECTED:
                 //Tagの時だけ.mollはonServicesDiscoveredで処理
-                if(deviceView == mTagDeviceView ) {
+                if (deviceView == mTagDeviceView) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -262,17 +275,17 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                             //メッセージ表示
                             Toast.makeText(getActivity(), R.string.message_connected, Toast.LENGTH_LONG).show();
                             //SearchButtonの有効
-                            if(mMollDeviceView.getConnectedStatus()){
+                            if (mMollDeviceView.getConnectedStatus()) {
                                 mSearchButton.setEnabled(true);
                             }
                         }
                     });
-                }else{
+                } else {
                     mMollBluetoothGatt.discoverServices();
                 }
                 break;
             case BluetoothProfile.STATE_DISCONNECTED:
-                if(!mDestroyed) {
+                if (!mDestroyed) {
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
@@ -294,13 +307,13 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
     }
 
     //設定の読み込み
-    public void setSettings(){
+    public void setSettings() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        mInterval = sp.getInt(getString(R.string.key_interval),DEFAULT_INTERVAL);
-        mThreshold = sp.getInt(getString(R.string.key_threshold),DEFAULT_THRESHOLD);
+        mInterval = sp.getInt(getString(R.string.key_interval), DEFAULT_INTERVAL);
+        mThreshold = sp.getInt(getString(R.string.key_threshold), DEFAULT_THRESHOLD);
     }
 
-    private String getDistance(int rssi){
+    private String getDistance(int rssi) {
         //定数
         double a = -70;
         double b = 3.5;
@@ -312,10 +325,10 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
         return numberFormat.format(distance);
     }
 
-    private void writeCharacteristic(int rssi){
+    private void setCommand(int rssi) {
         byte command;
 
-        if(rssi < mThreshold) {
+        if (rssi < mThreshold) {
             if (mRssi == 0 || rssi >= mRssi) {
                 command = FORWARD;
             } else {
@@ -337,32 +350,57 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
                 }
             }
 
-        }else{
+        } else {
             //到達したんじゃね？
             command = STOP;
 
-            isSearching = false;
+            mSearching = false;
             registerListener(false);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mSearchButton.setEnabled(false);
                     //Toastの表示
-                    Toast.makeText(getActivity(), String.format(getString(R.string.message_found),mTagDeviceView.getBluetoothDevice().getName()),Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), String.format(getString(R.string.message_found), mTagDeviceView.getBluetoothDevice().getName()), Toast.LENGTH_LONG).show();
                 }
             });
         }
 
         //コマンドの送信
+        writeCharacteristic(command);
+        //電波強度の更新
+        mRssi = rssi;
+    }
+
+    private void writeCharacteristic(byte command) {
+        //コマンドの送信
         if (mTxCharacteristic != null) {
             mTxCharacteristic.setValue(new byte[]{command});
             mMollBluetoothGatt.writeCharacteristic(mTxCharacteristic);
         }
-
-        mRssi = rssi;
     }
 
-    //リスナの登録
+    //探索開始のダイアログ
+    private void showSearchStartConfirmDialog(){
+        //多重起動の防止
+        if(getFragmentManager().findFragmentByTag(TAG_SEARCH_START_CONFIRM) == null) {
+            ConfirmDialogFragment dialogFragment = ConfirmDialogFragment.newInstance(String.format(getString(R.string.message_search_start), mTagDeviceView.getBluetoothDevice().getName()), R.string.action_start);
+            dialogFragment.setTargetFragment(this, REQUEST_CODE_SEARCH_START_CONFIRM);
+            dialogFragment.show(getFragmentManager(), TAG_SEARCH_START_CONFIRM);
+        }
+    }
+
+
+    //探索停止のダイアログ
+    private void showSearchAbortConfirmDialog(){
+        //多重起動の防止
+        if(getFragmentManager().findFragmentByTag(TAG_SEARCH_ABORT_CONFIRM) == null) {
+            ConfirmDialogFragment dialogFragment = ConfirmDialogFragment.newInstance(String.format(getString(R.string.message_search_abort), mTagDeviceView.getBluetoothDevice().getName()), R.string.action_abort);
+            dialogFragment.setTargetFragment(this, REQUEST_CODE_SEARCH_ABORT_CONFIRM);
+            dialogFragment.show(getFragmentManager(), TAG_SEARCH_ABORT_CONFIRM);
+        }
+    }
+
+    //センサのリスナの登録
     private void registerListener(boolean enabled){
         register = enabled;
         if(enabled) {
@@ -382,6 +420,22 @@ public class AutoFragment extends BaseFragment implements SensorEventListener{
             case REQUEST_CODE_DEVICE_DATA:
                 if (resultCode == BaseDialogFragment.RESULT_OK) {
                     connectGatt(extras.getInt(ARG_ID), (BluetoothDevice) extras.getParcelable(ARG_DEVICE));
+                }
+                break;
+            case REQUEST_CODE_SEARCH_START_CONFIRM:
+                if(resultCode == BaseDialogFragment.RESULT_OK){
+                    //センサのリスナの登録
+                    registerListener(true);
+                    mSearching = true;
+                }
+                break;
+            case REQUEST_CODE_SEARCH_ABORT_CONFIRM:
+                if(resultCode == BaseDialogFragment.RESULT_OK){
+                    //停止コマンドの送信
+                    writeCharacteristic(STOP);
+                    //センサのリスナの解除
+                    registerListener(false);
+                    mSearching = false;
                 }
                 break;
         }

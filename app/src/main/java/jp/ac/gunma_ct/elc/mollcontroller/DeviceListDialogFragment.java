@@ -1,8 +1,6 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
-import android.animation.LayoutTransition;
-import android.app.Activity;
-import android.app.DialogFragment;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
@@ -12,12 +10,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.DialogPreference;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -43,7 +39,7 @@ public class DeviceListDialogFragment extends BaseDialogFragment {
     private Handler mHandler=new Handler();
 
     public static DeviceListDialogFragment newInstance(int id){
-        DeviceListDialogFragment dialogFragment=new DeviceListDialogFragment();
+        DeviceListDialogFragment dialogFragment = new DeviceListDialogFragment();
         Bundle args=new Bundle();
         args.putInt(ARG_ID,id);
         dialogFragment.setArguments(args);

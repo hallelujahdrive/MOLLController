@@ -237,7 +237,7 @@ public class MainActivity extends ActionBarActivity
     }
 
 
-    private static class NoBluetoothDialog extends DialogFragment {
+    public static class NoBluetoothDialog extends DialogFragment {
 
         @Override
         public AlertDialog onCreateDialog(Bundle savedInstanceState){
