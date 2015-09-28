@@ -4,7 +4,7 @@
     <string name="key_interval">INTERVAL</string>
     <string name="key_search_end_threshold">SEARCH_END_THRESHOLD</string>
     <string name="key_sensor_threshold">SENSOR_THRESHOLD</string>
-    <string name="key_alarm">ALARM</string>
+    <string name="key_notification">NOTIFICATION</string>
     <string name="key_license">LICENSE</string>
     <string name="key_open_source_license">OPEN_SOURCE_LICENSE</string>
     <string name="key_creative_commons_license">CREATIVE_COMMONS_LICENSE</string>

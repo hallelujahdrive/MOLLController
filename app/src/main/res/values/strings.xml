@@ -25,7 +25,7 @@
     <string name="title_interval">通信強度の更新間隔</string>
     <string name="title_search_end_threshold">探索終了判定の閾値</string>
     <string name="title_sensor_threshold">赤外線センサの閾値</string>
-    <string name="title_alarm">アラーム音</string>
+    <string name="title_notification">通知音</string>
     <string name="title_license">ライセンス情報</string>
     <string name="title_open_source_license">オープンソースライセンス</string>
     <string name="title_creative_commons_license">クリエイティブ・コモンズ・ライセンス</string>

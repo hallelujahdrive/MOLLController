@@ -1,17 +1,14 @@
 package jp.ac.gunma_ct.elc.mollcontroller;
 
 import android.app.FragmentManager;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.provider.MediaStore;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -88,11 +85,11 @@ public class SettingsActivity extends AppCompatActivity{
             addPreferencesFromResource(R.xml.settings_preference);
 
             mSp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String uriString = mSp.getString(getString(R.string.key_alarm), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
+            String uriString = mSp.getString(getString(R.string.key_notification), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
             mUri = uriString == "" ? null : Uri.parse(uriString);
 
             //アラーム音の選択
-            mAlarmPreference = findPreference(getString(R.string.key_alarm));
+            mAlarmPreference = findPreference(getString(R.string.key_notification));
             if(mAlarmPreference != null){
                 //Summaryの設定
                 mAlarmPreference.setSummary(getRingtoneTitle(mUri));
@@ -102,9 +99,9 @@ public class SettingsActivity extends AppCompatActivity{
                     public boolean onPreferenceClick(Preference preference) {
                         Intent i = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
                         //Preferenceのタイトル
-                        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.title_alarm));
+                        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.title_notification));
                         //アラームの表示(ぶっちゃけTYPE_RINGTONEと違いわからない)
-                        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
+                        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
                         //デフォルトの選択
                         i.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mUri);
                         startActivityForResult(i, REQUEST_CODE_RINGTONE_PICKER);
@@ -148,7 +145,7 @@ public class SettingsActivity extends AppCompatActivity{
                         mAlarmPreference.setSummary(getRingtoneTitle(mUri));
                         //SharedPreferencesにput
                         SharedPreferences.Editor editor = mSp.edit();
-                        editor.putString(getString(R.string.key_alarm), mUri == null ? "" : mUri.toString());
+                        editor.putString(getString(R.string.key_notification), mUri == null ? "" : mUri.toString());
 
                         editor.apply();
                     }
@@ -177,7 +174,7 @@ public class SettingsActivity extends AppCompatActivity{
                 MediaMetadataRetriever mmr = new MediaMetadataRetriever();
                 mmr.setDataSource(getActivity(), uri);
                 title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                if (uri.equals(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))) {
+                if(uri.equals(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE))){
                     title = String.format(getString(R.string.text_default_ringtone_title), title);
                 }
             }

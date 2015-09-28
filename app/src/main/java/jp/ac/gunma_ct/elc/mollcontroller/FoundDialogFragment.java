@@ -2,13 +2,11 @@ package jp.ac.gunma_ct.elc.mollcontroller;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -68,7 +66,7 @@ public class FoundDialogFragment extends BaseDialogFragment {
         activity.setVolumeControlStream(AudioManager.STREAM_ALARM);
         //アラーム音
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
-        final String uriString = sp.getString(getString(R.string.key_alarm), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
+        final String uriString = sp.getString(getString(R.string.key_notification), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
         //なしの場合は弾く
         if(uriString != "") {
             //読み込みは念のため別スレッドでやります
