@@ -17,6 +17,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,7 +26,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements NavigationDrawerFragment.NavigationDrawerCallbacks {
 
     private static final int REQUEST_ENABLE_BT = 0;
@@ -33,7 +34,8 @@ public class MainActivity extends ActionBarActivity
 
     private static final int VALUE_DEFAULT_SCAN_PERIOD = 10;
     private static final int VALUE_DEFAULT_INTERVAL = 1000;
-    private static final int VALUE_DEFAULT_THRESHOLD = -40;
+    private static final int VALUE_DEFAULT_SEARCH_END_THRESHOLD = -40;
+    private static final int VALUE_DEFAULT_SENSOR_THRESHOLD = 500;
 
     private static final String KEY_PREFERENCE_EXIST = "PREFERENCE_EXIST";
 
@@ -42,6 +44,8 @@ public class MainActivity extends ActionBarActivity
     private static final String TAG_MANUAL = "MANUAL";
 
     private SharedPreferences mSp;
+
+    private String mCurrentTag;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -120,6 +124,8 @@ public class MainActivity extends ActionBarActivity
                     if (actionBar != null) {
                         mToolbarLayout.animate().translationY(0).setInterpolator(new DecelerateInterpolator()).start();
                     }
+                    //タグの更新
+                    mCurrentTag = TAG_AUTO;
                     break;
                 //コントローラ
                 case 1:
@@ -128,6 +134,8 @@ public class MainActivity extends ActionBarActivity
                     if (actionBar != null) {
                         mToolbarLayout.animate().translationY(-mToolbarLayout.getHeight()).setInterpolator(new AccelerateInterpolator(2)).start();
                     }
+                    //タグの更新
+                    mCurrentTag = TAG_MANUAL;
                     break;
             }
             transaction.commit();
@@ -203,9 +211,12 @@ public class MainActivity extends ActionBarActivity
                 switch (resultCode){
                     case Activity.RESULT_OK:
                         //Intervalの更新
-                        android.app.Fragment fragment = getFragmentManager().findFragmentByTag(TAG_AUTO);
+                        android.app.Fragment fragment = getFragmentManager().findFragmentByTag(mCurrentTag);
                         if(fragment != null){
-                            ((AutoFragment)fragment).setSettings();
+                            ((BaseFragment)fragment).setUpMoll();
+                            if(mCurrentTag == TAG_AUTO) {
+                                ((AutoFragment) fragment).setSettings();
+                            }
                         }
                 }
                 break;
@@ -225,7 +236,8 @@ public class MainActivity extends ActionBarActivity
         editor.putBoolean(KEY_PREFERENCE_EXIST,true);
         editor.putInt(getString(R.string.key_scan_period), VALUE_DEFAULT_SCAN_PERIOD);
         editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
-        editor.putInt(getString(R.string.key_threshold), VALUE_DEFAULT_THRESHOLD);
+        editor.putInt(getString(R.string.key_search_end_threshold), VALUE_DEFAULT_SEARCH_END_THRESHOLD);
+        editor.putInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
 
         //ﾁｮｹﾞﾌﾟﾙｨｨｨｨ
         editor.apply();

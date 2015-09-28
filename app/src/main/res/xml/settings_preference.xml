@@ -17,12 +17,18 @@
             app:magnification="@integer/interval_magnification"
             app:unit="@string/unit_milli_second" />
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
-            android:key="@string/key_threshold"
-            android:title="@string/title_threshold"
-            app:min="@integer/threshold_min"
-            app:max="@integer/threshold_max"
-            app:magnification="@integer/threshold_magnification"
+            android:key="@string/key_search_end_threshold"
+            android:title="@string/title_search_end_threshold"
+            app:min="@integer/search_end_threshold_min"
+            app:max="@integer/search_end_threshold_max"
+            app:magnification="@integer/search_end_threshold_magnification"
             app:unit="@string/unit_decibel" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_sensor_threshold"
+            android:title="@string/title_sensor_threshold"
+            app:min="@integer/sensor_threshold_min"
+            app:max="@integer/sensor_threshold_max"
+            app:magnification="@integer/sensor_threshold_magnification" />
     </PreferenceCategory>
     <PreferenceCategory>
         <Preference

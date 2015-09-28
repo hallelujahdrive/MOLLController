@@ -3,6 +3,7 @@ package jp.ac.gunma_ct.elc.mollcontroller;
 import android.app.Activity;
 import android.app.Fragment;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 
+import java.nio.ByteBuffer;
 import java.util.UUID;
 
 /**
@@ -26,9 +28,14 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected static final String TAG_RESCAN = "RESCAN";
     protected static final String TAG_DEVICE_DATA = "DEVICE_DATA";
 
+    private static final int VALUE_DEFAULT_SENSOR_THRESHOLD = 500;
+
     protected static final int REQUEST_CODE_DEVICE_LIST = 0;
     protected static final int REQUEST_CODE_RESCAN = 1;
     protected static final int REQUEST_CODE_DEVICE_DATA = 2;
+
+    private static final byte SET_UP = 0;
+    private static final byte COMMAND = 1;
 
     protected static final byte STOP = 0;
     protected static final byte FORWARD = 1;
@@ -106,4 +113,36 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
             dialogFragment.show(getFragmentManager(), TAG_DEVICE_LIST);
         }
     }
+
+    //Mollのセットアップ
+    protected void setUpMoll(BluetoothGatt bluetoothGatt){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        int sensorThreshold = sp.getInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(4);
+        byteBuffer.putInt(sensorThreshold);
+        byte[] value = new byte[5];
+        value[0] = SET_UP;
+        int i = 1;
+        for(byte data : byteBuffer.array()){
+            value[i++] = data;
+        }
+        writeCharacteristic(bluetoothGatt, value);
+    }
+
+    //コマンドの送信
+    protected void sendCommand(BluetoothGatt bluetoothGatt, byte command){
+        byte[] value = {COMMAND, command};
+        writeCharacteristic(bluetoothGatt, value);
+    }
+
+    //コマンドの送信
+    protected void writeCharacteristic(BluetoothGatt bluetoothGatt, byte[] value) {
+        if (mTxCharacteristic != null) {
+            mTxCharacteristic.setValue(value);
+            bluetoothGatt.writeCharacteristic(mTxCharacteristic);
+        }
+    }
+
+    public abstract void setUpMoll();
 }

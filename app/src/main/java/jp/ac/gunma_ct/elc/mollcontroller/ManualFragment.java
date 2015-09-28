@@ -122,6 +122,13 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
+    public void setUpMoll() {
+        if (mBluetoothGatt != null) {
+            setUpMoll(mBluetoothGatt);
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         byte command = 0;
         switch (v.getId()) {
@@ -149,10 +156,7 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         }
 
         //コマンドの送信
-        if (mTxCharacteristic != null){
-            mTxCharacteristic.setValue(new byte[]{command});
-            mBluetoothGatt.writeCharacteristic(mTxCharacteristic);
-        }
+        sendCommand(mBluetoothGatt, command);
     }
 
     @Override
@@ -236,6 +240,8 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
                 //送信用のCharacteristicがこれで取得できるってばっちゃが言ってた
                 BluetoothGattService service = mBluetoothGatt.getService(RBL_SERVICE);
                 mTxCharacteristic = service.getCharacteristic(RBL_DEVICE_TX_UUID);
+                //Mollのsetup
+                setUpMoll(mBluetoothGatt);
 
                 handler.post(new Runnable() {
                     @Override

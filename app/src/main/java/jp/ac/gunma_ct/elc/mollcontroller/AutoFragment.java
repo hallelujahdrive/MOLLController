@@ -186,6 +186,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                             //送信用のCharacteristicがこれで取得できるってばっちゃが言ってた
                             BluetoothGattService service = mMollBluetoothGatt.getService(RBL_SERVICE);
                             mTxCharacteristic = service.getCharacteristic(RBL_DEVICE_TX_UUID);
+                            //Mollのsetup
+                            setUpMoll(mMollBluetoothGatt);
 
                             handler.post(new Runnable() {
                                 @Override
@@ -193,6 +195,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                                     if (status == BluetoothGatt.GATT_SUCCESS) {
                                         mMollDeviceView.setConnectionStatus(true);
                                         Toast.makeText(getActivity(), R.string.message_connected, Toast.LENGTH_LONG).show();
+
                                         //SearchButtonの有効
                                         if (mTagDeviceView.getConnectedStatus()) {
                                             mSearchButton.setEnabled(true);
@@ -310,7 +313,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     public void setSettings() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mInterval = sp.getInt(getString(R.string.key_interval), DEFAULT_INTERVAL);
-        mThreshold = sp.getInt(getString(R.string.key_threshold), DEFAULT_THRESHOLD);
+        mThreshold = sp.getInt(getString(R.string.key_search_end_threshold), DEFAULT_THRESHOLD);
     }
 
     private String getDistance(int rssi) {
@@ -366,17 +369,9 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         }
 
         //コマンドの送信
-        writeCharacteristic(command);
+        sendCommand(mMollBluetoothGatt, command);
         //電波強度の更新
         mRssi = rssi;
-    }
-
-    private void writeCharacteristic(byte command) {
-        //コマンドの送信
-        if (mTxCharacteristic != null) {
-            mTxCharacteristic.setValue(new byte[]{command});
-            mMollBluetoothGatt.writeCharacteristic(mTxCharacteristic);
-        }
     }
 
     //探索開始のダイアログ
@@ -432,12 +427,19 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
             case REQUEST_CODE_SEARCH_ABORT_CONFIRM:
                 if(resultCode == BaseDialogFragment.RESULT_OK){
                     //停止コマンドの送信
-                    writeCharacteristic(STOP);
+                    sendCommand(mMollBluetoothGatt, STOP);
                     //センサのリスナの解除
                     registerListener(false);
                     mSearching = false;
                 }
                 break;
+        }
+    }
+
+    @Override
+    public void setUpMoll() {
+        if(mMollBluetoothGatt != null) {
+            setUpMoll(mMollBluetoothGatt);
         }
     }
 
