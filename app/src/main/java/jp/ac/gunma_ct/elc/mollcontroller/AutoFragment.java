@@ -12,6 +12,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -33,9 +34,11 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
 
     private static final int REQUEST_CODE_SEARCH_START_CONFIRM = 3;
     private static final int REQUEST_CODE_SEARCH_ABORT_CONFIRM = 4;
+    private static final int REQUEST_CODE_FOUND = 5;
 
     private static final String TAG_SEARCH_START_CONFIRM = "SEARCH_START_CONFIRM";
     private static final String TAG_SEARCH_ABORT_CONFIRM = "SEARCH_ABORT_CONFIRM";
+    private static final String TAG_FOUND = "FOUND";
 
     //回転角度(暫定)
     private static final double MAX_DEG = Math.PI / 3;
@@ -90,6 +93,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                              Bundle savedInstanceState) {
         //フルスクリーンの解除
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 
         //更新間隔の設定
         setSettings();
@@ -153,7 +157,6 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (mSearching) {
                     //探索中断ダイアログを表示
                     showSearchAbortConfirmDialog();
@@ -362,8 +365,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    //Toastの表示
-                    Toast.makeText(getActivity(), String.format(getString(R.string.message_found), mTagDeviceView.getBluetoothDevice().getName()), Toast.LENGTH_LONG).show();
+                    onFoundTag();
                 }
             });
         }
@@ -384,7 +386,6 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         }
     }
 
-
     //探索停止のダイアログ
     private void showSearchAbortConfirmDialog(){
         //多重起動の防止
@@ -392,6 +393,18 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
             ConfirmDialogFragment dialogFragment = ConfirmDialogFragment.newInstance(String.format(getString(R.string.message_search_abort), mTagDeviceView.getBluetoothDevice().getName()), R.string.action_abort);
             dialogFragment.setTargetFragment(this, REQUEST_CODE_SEARCH_ABORT_CONFIRM);
             dialogFragment.show(getFragmentManager(), TAG_SEARCH_ABORT_CONFIRM);
+        }
+    }
+
+    //探索終了
+    private void onFoundTag(){
+        //ダイアログの表示
+        //画面の自動点灯とか実装したほうがいいんかな
+        //多重起動の防止
+        if(getFragmentManager().findFragmentByTag(TAG_FOUND) == null){
+            FoundDialogFragment dialogFragment = FoundDialogFragment.newInstance(mTagDeviceView.getBluetoothDevice());
+            dialogFragment.setTargetFragment(this, REQUEST_CODE_FOUND);
+            dialogFragment.show(getFragmentManager(), TAG_FOUND);
         }
     }
 

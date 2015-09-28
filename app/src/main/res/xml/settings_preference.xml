@@ -29,11 +29,13 @@
             app:min="@integer/sensor_threshold_min"
             app:max="@integer/sensor_threshold_max"
             app:magnification="@integer/sensor_threshold_magnification" />
+        <Preference
+            android:key="@string/key_alarm"
+            android:title="@string/title_alarm" />
     </PreferenceCategory>
     <PreferenceCategory>
         <Preference
             android:key="@string/key_license"
-            android:title="@string/title_license">
-        </Preference>
+            android:title="@string/title_license" />
     </PreferenceCategory>
 </PreferenceScreen>

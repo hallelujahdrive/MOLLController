@@ -25,6 +25,7 @@
     <string name="title_interval">通信強度の更新間隔</string>
     <string name="title_search_end_threshold">探索終了判定の閾値</string>
     <string name="title_sensor_threshold">赤外線センサの閾値</string>
+    <string name="title_alarm">アラーム音</string>
     <string name="title_license">ライセンス情報</string>
     <string name="title_open_source_license">オープンソースライセンス</string>
     <string name="title_creative_commons_license">クリエイティブ・コモンズ・ライセンス</string>
@@ -34,12 +35,12 @@
 
     <string name="message_no_bluetooth">Bluetoothデバイスが存在しません</string>
     <string name="message_device_not_found">デバイスが見つかりませんでした</string>
-    <string name="message_search_start">%sの探索を開始します</string>
-    <string name="message_search_abort">%sの探索を中止しますか?</string>
+    <string name="message_search_start">BLEタグ(%s)の探索を開始します</string>
+    <string name="message_search_abort">BLEタグ(%s)の探索を中止しますか?</string>
+    <string name="message_found">BLEタグ(%s)を発見しました</string>
 
     <string name="message_disconnected">切断しました</string>
     <string name="message_connected">接続しました</string>
-    <string name="message_found">%sを発見しました</string>
     <string name="message_fault">なにかがおかしいよ</string>
 
     <string name="action_settings">設定</string>
@@ -51,12 +52,16 @@
     <string name="action_abort">中止</string>
 
     <string name="action_cancel">キャンセル</string>
+    <string name="action_retry">リトライ</string>
 
     <string name="action_searching">検索中です</string>
 
     <string name="status_not_setting">未設定</string>
     <string name="status_connected">接続</string>
     <string name="status_disconnected">切断</string>
+
+    <string name="text_no_ringtone">なし</string>
+    <string name="text_default_ringtone_title">既定(%s)</string>
 
     <string name="unit_second">秒</string>
     <string name="unit_milli_second">ミリ秒</string>

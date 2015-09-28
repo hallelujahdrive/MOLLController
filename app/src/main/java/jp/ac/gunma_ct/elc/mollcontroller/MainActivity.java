@@ -12,6 +12,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
+import android.media.RingtoneManager;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
@@ -238,6 +239,7 @@ public class MainActivity extends AppCompatActivity
         editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
         editor.putInt(getString(R.string.key_search_end_threshold), VALUE_DEFAULT_SEARCH_END_THRESHOLD);
         editor.putInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
+        editor.putString(getString(R.string.key_alarm), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
 
         //ﾁｮｹﾞﾌﾟﾙｨｨｨｨ
         editor.apply();

@@ -35,17 +35,17 @@ public class ConfirmDialogFragment extends BaseDialogFragment {
         //メッセージの表示
         builder.setMessage(args.getString(ARG_MESSAGE));
 
+        //ボタンの設定
+        final Intent i = new Intent();
         builder.setPositiveButton(args.getInt(ARG_POSITIVE_BUTTON_TEXT), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent();
                 mListener.onDialogResult(getTargetRequestCode(), RESULT_OK, i);
                 dismiss();
             }
         }).setNegativeButton(R.string.action_cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent i = new Intent();
                 mListener.onDialogResult(getTargetRequestCode(), RESULT_CANCELED, i);
                 dismiss();
             }
