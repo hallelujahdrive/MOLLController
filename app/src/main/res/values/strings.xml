@@ -22,19 +22,21 @@
     <string name="title_distance">距離</string>
 
     <string name="title_activity_settings">設定</string>
-
+    
+    <string name="title_common_settings">共通設定</string>
     <string name="title_scan_period">デバイスの検索時間</string>
+    <string name="title_sensor_threshold">赤外線センサの閾値</string>
+
+    <string name="title_auto_settings">自動探索の設定</string>
     <string name="title_interval">通信強度の更新間隔</string>
     <string name="title_search_end_threshold">探索終了判定の閾値</string>
-    <string name="title_sensor_threshold">赤外線センサの閾値</string>
     <string name="title_notification">通知音</string>
+
+    <string name="title_other">その他</string>
     <string name="title_license">ライセンス情報</string>
     <string name="title_open_source_license">オープンソースライセンス</string>
     <string name="title_creative_commons_license">クリエイティブ・コモンズ・ライセンス</string>
-
-    <string name="title_activity_found_notification">FoundNotificationActivity</string>
-
-
+    
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
