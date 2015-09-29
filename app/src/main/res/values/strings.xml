@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MOLL Controller</string>
 
+
+
     <string name="title_auto">自動探索</string>
     <string name="title_manual">コントローラ</string>
     <string name="title_settings">設定</string>
@@ -29,6 +31,9 @@
     <string name="title_license">ライセンス情報</string>
     <string name="title_open_source_license">オープンソースライセンス</string>
     <string name="title_creative_commons_license">クリエイティブ・コモンズ・ライセンス</string>
+
+    <string name="title_activity_found_notification">FoundNotificationActivity</string>
+
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

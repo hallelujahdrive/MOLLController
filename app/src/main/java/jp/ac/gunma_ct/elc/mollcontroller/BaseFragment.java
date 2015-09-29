@@ -34,9 +34,12 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected static final int REQUEST_CODE_RESCAN = 1;
     protected static final int REQUEST_CODE_DEVICE_DATA = 2;
 
+    //命令タイプ
     private static final byte SET_UP = 0;
     private static final byte COMMAND = 1;
+    private static final byte SET_LED = 2;
 
+    //コマンド
     protected static final byte STOP = 0;
     protected static final byte FORWARD = 1;
     protected static final byte BACK = 2;
@@ -45,6 +48,9 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected static final byte TURN_LEFT = 5;
     protected static final byte TURN_RIGHT = 6;
 
+    //LEDのピン出力
+    protected static final byte LOW = 0;
+    protected static final byte HIGH = 1;
 
     public static final UUID RBL_SERVICE = UUID.fromString("713D0000-503E-4C75-BA94-3148F18D941E");
     public static final UUID RBL_DEVICE_RX_UUID = UUID.fromString("713D0002-503E-4C75-BA94-3148F18D941E");
@@ -136,7 +142,13 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
         writeCharacteristic(bluetoothGatt, value);
     }
 
-    //コマンドの送信
+    //LEDの設定
+    protected void setLed(BluetoothGatt bluetoothGatt, byte red, byte green, byte blue){
+        byte[] value = {SET_LED, red, green, blue};
+        writeCharacteristic(bluetoothGatt, value);
+    }
+
+    //送信
     protected void writeCharacteristic(BluetoothGatt bluetoothGatt, byte[] value) {
         if (mTxCharacteristic != null) {
             mTxCharacteristic.setValue(value);

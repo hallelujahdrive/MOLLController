@@ -29,6 +29,11 @@
             android:name=".LicenseActivity"
             android:label="@string/title_activity_license" >
         </activity>
+        <activity
+            android:name=".FoundNotificationActivity"
+            android:launchMode="singleTask"
+            android:theme="@style/AppPanelTheme">
+        </activity>
     </application>
 
 </manifest>

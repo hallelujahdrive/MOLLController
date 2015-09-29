@@ -18,12 +18,10 @@ import java.io.IOException;
 /**
  * Created by Chiharu on 2015/09/29.
  */
-public class FoundDialogFragment extends BaseDialogFragment {
+public class FoundNotificationDialogFragment extends BaseDialogFragment {
 
-    private MediaPlayer mMediaPlayer = null;
-
-    public static FoundDialogFragment newInstance(BluetoothDevice device){
-        FoundDialogFragment dialogFragment = new FoundDialogFragment();
+    public static FoundNotificationDialogFragment newInstance(BluetoothDevice device){
+        FoundNotificationDialogFragment dialogFragment = new FoundNotificationDialogFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_DEVICE, device);
         dialogFragment.setArguments(args);
@@ -34,13 +32,11 @@ public class FoundDialogFragment extends BaseDialogFragment {
     @Override
     public AlertDialog onCreateDialog(Bundle savedInstanceState) {
 
-        mListener = (OnDialogInteractionListener) getTargetFragment();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
         //メッセージの表示
-        //builder.setMessage(String.format(getString(R.string.message_found), ((BluetoothDevice) getArguments().getParcelable(ARG_DEVICE)).getName()));
-        builder.setMessage(String.format(getString(R.string.message_found),"Dummy"));
+        builder.setMessage(String.format(getString(R.string.message_found), ((BluetoothDevice) getArguments().getParcelable(ARG_DEVICE)).getName()));
 
         //ボタンの設定
         final Intent i = new Intent();
@@ -62,42 +58,23 @@ public class FoundDialogFragment extends BaseDialogFragment {
     @Override
     public void onAttach(final Activity activity){
         super.onAttach(activity);
+        //Listenerの登録
+        mListener = (OnDialogInteractionListener) activity;
         //音量調節をアラームに
         activity.setVolumeControlStream(AudioManager.STREAM_ALARM);
-        //アラーム音
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(activity);
-        final String uriString = sp.getString(getString(R.string.key_notification), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
-        //なしの場合は弾く
-        if(uriString != "") {
-            //読み込みは念のため別スレッドでやります
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    mMediaPlayer = new MediaPlayer();
-                    try {
-                        mMediaPlayer.setDataSource(activity, Uri.parse(uriString));
-                        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
 
-                        //アラームの再生
-                        mMediaPlayer.setLooping(true);
-                        mMediaPlayer.prepare();
-                        mMediaPlayer.start();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }).start();
-        }
-        System.out.println("あたっち");
     }
 
     @Override
     public void onDetach(){
         super.onDetach();
-        if(mMediaPlayer != null){
-            //アラームの停止
-            mMediaPlayer.stop();
-        }
-        System.out.println("でたっち");
+        //リスナの解除
+        mListener = null;
+    }
+
+    @Override
+    public void onDismiss(DialogInterface dialog){
+        super.onDismiss(dialog);
+        getActivity().finish();
     }
 }
