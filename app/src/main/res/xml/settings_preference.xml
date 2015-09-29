@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_common_settings">
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
             android:key="@string/key_scan_period"
             android:title="@string/title_scan_period"
@@ -9,6 +9,14 @@
             app:max="@integer/scan_period_max"
             app:magnification="@integer/scan_period_magnification"
             app:unit="@string/unit_second" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_sensor_threshold"
+            android:title="@string/title_sensor_threshold"
+            app:min="@integer/sensor_threshold_min"
+            app:max="@integer/sensor_threshold_max"
+            app:magnification="@integer/sensor_threshold_magnification" />
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_auto_settings" >
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
             android:key="@string/key_interval"
             android:title="@string/title_interval"
@@ -23,17 +31,11 @@
             app:max="@integer/search_end_threshold_max"
             app:magnification="@integer/search_end_threshold_magnification"
             app:unit="@string/unit_decibel" />
-        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
-            android:key="@string/key_sensor_threshold"
-            android:title="@string/title_sensor_threshold"
-            app:min="@integer/sensor_threshold_min"
-            app:max="@integer/sensor_threshold_max"
-            app:magnification="@integer/sensor_threshold_magnification" />
         <Preference
             android:key="@string/key_notification"
             android:title="@string/title_notification" />
     </PreferenceCategory>
-    <PreferenceCategory>
+    <PreferenceCategory android:title="@string/title_other">
         <Preference
             android:key="@string/key_license"
             android:title="@string/title_license" />

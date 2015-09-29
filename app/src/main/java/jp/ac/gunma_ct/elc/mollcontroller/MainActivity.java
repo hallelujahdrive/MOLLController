@@ -22,8 +22,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.widget.DrawerLayout;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
@@ -35,9 +33,9 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_CODE_SETTINGS = 1;
 
     private static final int VALUE_DEFAULT_SCAN_PERIOD = 10;
+    private static final int VALUE_DEFAULT_SENSOR_THRESHOLD = 500;
     private static final int VALUE_DEFAULT_INTERVAL = 1000;
     private static final int VALUE_DEFAULT_SEARCH_END_THRESHOLD = -40;
-    private static final int VALUE_DEFAULT_SENSOR_THRESHOLD = 500;
 
     private static final String KEY_PREFERENCE_EXIST = "PREFERENCE_EXIST";
 
@@ -233,9 +231,9 @@ public class MainActivity extends AppCompatActivity
 
         editor.putBoolean(KEY_PREFERENCE_EXIST,true);
         editor.putInt(getString(R.string.key_scan_period), VALUE_DEFAULT_SCAN_PERIOD);
+        editor.putInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
         editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
         editor.putInt(getString(R.string.key_search_end_threshold), VALUE_DEFAULT_SEARCH_END_THRESHOLD);
-        editor.putInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
         editor.putString(getString(R.string.key_notification), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
 
         //ﾁｮｹﾞﾌﾟﾙｨｨｨｨ
