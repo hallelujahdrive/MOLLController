@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -20,7 +21,7 @@ import android.widget.Toast;
 /**
  * Created by Chiharu on 2015/08/14.
  */
-public class ManualFragment extends BaseFragment implements View.OnClickListener{
+public class ManualFragment extends BaseFragment implements View.OnTouchListener{
 
     private static final String ARG_IS_CHECKED = "IS_CHECKED";
 
@@ -85,13 +86,13 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
         //最初はボタンは全部無効
         setButtonsEnabled(false);
 
-        mStopButton.setOnClickListener(this);
-        mForwardButton.setOnClickListener(this);
-        mBackButton.setOnClickListener(this);
-        mLeftButton.setOnClickListener(this);
-        mRightButton.setOnClickListener(this);
-        mTurnLeftButton.setOnClickListener(this);
-        mTurnRightButton.setOnClickListener(this);
+        mStopButton.setOnTouchListener(this);
+        mForwardButton.setOnTouchListener(this);
+        mBackButton.setOnTouchListener(this);
+        mLeftButton.setOnTouchListener(this);
+        mRightButton.setOnTouchListener(this);
+        mTurnLeftButton.setOnTouchListener(this);
+        mTurnRightButton.setOnTouchListener(this);
 
         return view;
     }
@@ -129,34 +130,45 @@ public class ManualFragment extends BaseFragment implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View v) {
-        byte command = 0;
-        switch (v.getId()) {
-            case R.id.stop_button:
-                command = STOP;
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (event.getAction()){
+            //ボタンを押した
+            case MotionEvent.ACTION_DOWN:
+                byte command = STOP;
+                switch (v.getId()) {
+                    case R.id.stop_button:
+                        command = STOP;
+                        break;
+                    case R.id.forward_button:
+                        command = FORWARD;
+                        break;
+                    case R.id.back_button:
+                        command = BACK;
+                        break;
+                    case R.id.left_button:
+                        command = LEFT;
+                        break;
+                    case R.id.right_button:
+                        command = RIGHT;
+                        break;
+                    case R.id.turn_left_button:
+                        command = TURN_LEFT;
+                        break;
+                    case R.id.turn_right_button:
+                        command = TURN_RIGHT;
+                        break;
+                }
+                //コマンドの送信
+                sendCommand(mBluetoothGatt, command);
                 break;
-            case R.id.forward_button:
-                command = FORWARD;
-                break;
-            case R.id.back_button:
-                command = BACK;
-                break;
-            case R.id.left_button:
-                command = LEFT;
-                break;
-            case R.id.right_button:
-                command = RIGHT ;
-                break;
-            case R.id.turn_left_button:
-                command = TURN_LEFT;
-                break;
-            case R.id.turn_right_button:
-                command = TURN_RIGHT;
+            //ボタンを離した
+            case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
+                //コマンドの送信
+                sendCommand(mBluetoothGatt, STOP);
                 break;
         }
-
-        //コマンドの送信
-        sendCommand(mBluetoothGatt, command);
+        return false;
     }
 
     @Override

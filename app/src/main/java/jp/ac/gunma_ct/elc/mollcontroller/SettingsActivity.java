@@ -101,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity{
                         //Preferenceのタイトル
                         i.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getString(R.string.title_notification));
                         //アラームの表示(ぶっちゃけTYPE_RINGTONEと違いわからない)
-                        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_RINGTONE);
+                        i.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_ALARM);
                         //デフォルトの選択
                         i.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, mUri);
                         startActivityForResult(i, REQUEST_CODE_RINGTONE_PICKER);
@@ -174,7 +174,7 @@ public class SettingsActivity extends AppCompatActivity{
                 MediaMetadataRetriever mmr = new MediaMetadataRetriever();
                 mmr.setDataSource(getActivity(), uri);
                 title = mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_TITLE);
-                if(uri.equals(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE))){
+                if(uri.equals(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM))){
                     title = String.format(getString(R.string.text_default_ringtone_title), title);
                 }
             }
