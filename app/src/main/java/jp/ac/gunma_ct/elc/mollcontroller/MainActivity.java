@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity
     private static final int VALUE_DEFAULT_SCAN_PERIOD = 10;
     private static final int VALUE_DEFAULT_SENSOR_THRESHOLD = 500;
     private static final int VALUE_DEFAULT_INTERVAL = 1000;
+    private static final int VALUE_DEFAULT_HISTORIES = 1;
     private static final int VALUE_DEFAULT_SEARCH_END_THRESHOLD = -40;
 
     private static final String KEY_PREFERENCE_EXIST = "PREFERENCE_EXIST";
@@ -211,7 +212,7 @@ public class MainActivity extends AppCompatActivity
                         if(fragment != null){
                             ((BaseFragment)fragment).setUpMoll();
                             if(mCurrentTag == TAG_AUTO) {
-                                ((AutoFragment) fragment).setSettings();
+                                ((AutoFragment) fragment).setUp();
                             }
                         }
                 }
@@ -233,6 +234,7 @@ public class MainActivity extends AppCompatActivity
         editor.putInt(getString(R.string.key_scan_period), VALUE_DEFAULT_SCAN_PERIOD);
         editor.putInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
         editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
+        editor.putInt(getString(R.string.key_histories), VALUE_DEFAULT_HISTORIES);
         editor.putInt(getString(R.string.key_search_end_threshold), VALUE_DEFAULT_SEARCH_END_THRESHOLD);
         editor.putString(getString(R.string.key_notification), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());
 

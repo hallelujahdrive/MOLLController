@@ -29,6 +29,7 @@
 
     <string name="title_auto_settings">自動探索の設定</string>
     <string name="title_interval">通信強度の更新間隔</string>
+    <string name="title_histories">参照する通信強度の履歴</string>
     <string name="title_search_end_threshold">探索終了判定の閾値</string>
     <string name="title_notification">通知音</string>
 
@@ -74,6 +75,7 @@
     <string name="unit_second">秒</string>
     <string name="unit_milli_second">ミリ秒</string>
     <string name="unit_decibel">dB</string>
+    <string name="unit_times">回</string>
 
     <string name="device_type_classic">DEVICE TYPE CLASSIC</string>
     <string name="device_type_le">DEVICE TYPE LE</string>

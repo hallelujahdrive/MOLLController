@@ -44,6 +44,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
 
     //デフォルトの値
     private static final int DEFAULT_INTERVAL = 1000;
+    private static final int DEFAULT_HISTORIES = 1;
     private static final int DEFAULT_THRESHOLD = -40;
 
     private DeviceView mMollDeviceView;
@@ -65,7 +66,10 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     private long mInterval;
     private int mThreshold;
 
-    private int mRssi = 0;
+    //通信強度の履歴数
+    private int[] mRssi;
+    private int mHistories;
+    //private int mRssi = 0;
 
     //角速度合計
     private double mTotalAngularVelocity;
@@ -93,9 +97,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         //フルスクリーンの解除
         getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
-        //更新間隔の設定
-        setSettings();
+        //設定の読み込み
+        setUp();
 
         //SensorManagerの取得
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
@@ -312,10 +315,14 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     }
 
     //設定の読み込み
-    public void setSettings() {
+    public void setUp() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mInterval = sp.getInt(getString(R.string.key_interval), DEFAULT_INTERVAL);
+        int histories = sp.getInt(getString(R.string.key_histories), DEFAULT_HISTORIES);
         mThreshold = sp.getInt(getString(R.string.key_search_end_threshold), DEFAULT_THRESHOLD);
+
+        mRssi = new int[histories];
+        mHistories = 0;
     }
 
     private String getDistance(int rssi) {
@@ -334,7 +341,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         byte command;
 
         if (rssi < mThreshold) {
-            if (mRssi == 0 || rssi >= mRssi) {
+            if (getRssiAverage() == 0 || rssi >= getRssiAverage()) {
                 command = FORWARD;
             } else {
                 //回転開始の初期化
@@ -374,7 +381,35 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         //コマンドの送信
         sendCommand(mMollBluetoothGatt, command);
         //電波強度の更新
-        mRssi = rssi;
+        if(getRssiAverage() == 0){
+            resetRssi(rssi);
+        }else {
+            updateRssi(rssi);
+        }
+    }
+
+    private void resetRssi(int rssi){
+        for(int i = 0 ; i < mRssi.length ; i++){
+            mRssi[i] = rssi;
+        }
+    }
+
+    //平均通信強度の取得
+    private double getRssiAverage(){
+        int total = 0;
+        for(int rssi : mRssi){
+            total += rssi;
+        }
+
+        return ((double)total)/mRssi.length;
+    }
+
+    //通信強度の更新
+    private void updateRssi(int rssi){
+        mRssi[mHistories] = rssi;
+        if(++mHistories >= mRssi.length){
+            mHistories = 0;
+        }
     }
 
     //探索開始のダイアログ
@@ -422,7 +457,6 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode){
             case REQUEST_CODE_FOUND_NOTIFICATION:
-                System.out.println("だいあろぐしゅうりょうぽよ");
                 //緑に戻す
                 setLed(mMollBluetoothGatt, LOW, HIGH, LOW);
                 //再検索
@@ -445,6 +479,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                 break;
             case REQUEST_CODE_SEARCH_START_CONFIRM:
                 if(resultCode == BaseDialogFragment.RESULT_OK){
+                    //初期化
+                    resetRssi(0);
                     //センサのリスナの登録
                     registerListener(true);
                     mSearching = true;

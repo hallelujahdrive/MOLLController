@@ -25,6 +25,13 @@
             app:magnification="@integer/interval_magnification"
             app:unit="@string/unit_milli_second" />
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_histories"
+            android:title="@string/title_histories"
+            app:min="@integer/histories_min"
+            app:max="@integer/histories_max"
+            app:magnification="@integer/histories_magnification"
+            app:unit="@string/unit_times" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
             android:key="@string/key_search_end_threshold"
             android:title="@string/title_search_end_threshold"
             app:min="@integer/search_end_threshold_min"
