@@ -10,11 +10,31 @@
             app:magnification="@integer/scan_period_magnification"
             app:unit="@string/unit_second" />
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_velocity"
+            android:title="@string/title_velocity"
+            app:min="@integer/velocity_min"
+            app:max="@integer/velocity_max"
+            app:magnification="@integer/velocity_magnification" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
             android:key="@string/key_sensor_threshold"
             android:title="@string/title_sensor_threshold"
             app:min="@integer/sensor_threshold_min"
             app:max="@integer/sensor_threshold_max"
             app:magnification="@integer/sensor_threshold_magnification" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_back_period"
+            android:title="@string/title_back_period"
+            app:min="@integer/back_period_min"
+            app:max="@integer/back_period_max"
+            app:magnification="@integer/back_period_magnification"
+            app:unit="@string/unit_milli_second" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_turn_period"
+            android:title="@string/title_turn_period"
+            app:min="@integer/turn_period_min"
+            app:max="@integer/turn_period_max"
+            app:magnification="@integer/turn_period_magnification"
+            app:unit="@string/unit_milli_second" />
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_auto_settings" >
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference

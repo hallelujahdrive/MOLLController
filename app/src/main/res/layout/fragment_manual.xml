@@ -44,7 +44,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/left_button"
+        android:id="@+id/turn_left_button"
         android:layout_centerVertical="true"
         style="?attr/circleButtonStyle"
         android:src="@drawable/ic_action_keyboard_arrow_left"
@@ -53,7 +53,7 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/right_button"
+        android:id="@+id/turn_right_button"
         android:layout_centerVertical="true"
         style="?attr/circleButtonStyle"
         android:src="@drawable/ic_action_keyboard_arrow_right"
@@ -62,19 +62,37 @@
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/turn_left_button"
+        android:id="@+id/left_forward_button"
         style="?attr/circleButtonStyle"
         android:src="@drawable/ic_action_rotate_left"
         android:layout_alignTop="@+id/forward_button"
-        android:layout_alignRight="@+id/left_button" />
+        android:layout_alignRight="@+id/turn_left_button" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/turn_right_button"
+        android:id="@+id/right_forward_button"
         style="?attr/circleButtonStyle"
         android:src="@drawable/ic_action_rotate_right"
         android:layout_alignTop="@+id/forward_button"
-        android:layout_alignLeft="@+id/right_button" />
+        android:layout_alignLeft="@+id/turn_right_button" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/left_back_button"
+        style="?attr/circleButtonStyle"
+        android:src="@drawable/ic_action_left_back"
+        android:layout_alignTop="@+id/back_button"
+        android:layout_alignRight="@+id/turn_left_button" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/right_back_button"
+        style="?attr/circleButtonStyle"
+        android:src="@drawable/ic_action_right_back"
+        android:layout_alignTop="@+id/back_button"
+        android:layout_alignLeft="@+id/turn_right_button" />
 
 </RelativeLayout>

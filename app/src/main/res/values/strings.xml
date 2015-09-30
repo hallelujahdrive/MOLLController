@@ -25,7 +25,10 @@
     
     <string name="title_common_settings">共通設定</string>
     <string name="title_scan_period">デバイスの検索時間</string>
+    <string name="title_velocity">速度(PWMのデューティー比)</string>
     <string name="title_sensor_threshold">赤外線センサの閾値</string>
+    <string name="title_back_period">回避の後退時間</string>
+    <string name="title_turn_period">回避の転回時間</string>
 
     <string name="title_auto_settings">自動探索の設定</string>
     <string name="title_interval">通信強度の更新間隔</string>

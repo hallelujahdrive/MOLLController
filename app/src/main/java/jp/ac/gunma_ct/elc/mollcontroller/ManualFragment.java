@@ -32,10 +32,13 @@ public class ManualFragment extends BaseFragment implements View.OnTouchListener
     private ImageButton mStopButton;
     private ImageButton mForwardButton;
     private ImageButton mBackButton;
-    private ImageButton mLeftButton;
-    private ImageButton mRightButton;
     private ImageButton mTurnLeftButton;
     private ImageButton mTurnRightButton;
+    private ImageButton mLeftForwardButton;
+    private ImageButton mRightForwardButton;
+    private ImageButton mLeftBackButton;
+    private ImageButton mRightBackButton;
+
 
     private BluetoothDevice mDevice;
     private BluetoothGatt mBluetoothGatt;
@@ -64,10 +67,12 @@ public class ManualFragment extends BaseFragment implements View.OnTouchListener
         mStopButton = (ImageButton) view.findViewById(R.id.stop_button);
         mForwardButton = (ImageButton) view.findViewById(R.id.forward_button);
         mBackButton = (ImageButton) view.findViewById(R.id.back_button);
-        mLeftButton = (ImageButton) view.findViewById(R.id.left_button);
-        mRightButton = (ImageButton) view.findViewById(R.id.right_button);
         mTurnLeftButton = (ImageButton) view.findViewById(R.id.turn_left_button);
         mTurnRightButton = (ImageButton) view.findViewById(R.id.turn_right_button);
+        mLeftForwardButton = (ImageButton) view.findViewById(R.id.left_forward_button);
+        mRightForwardButton = (ImageButton) view.findViewById(R.id.right_forward_button);
+        mLeftBackButton = (ImageButton) view.findViewById(R.id.left_back_button);
+        mRightBackButton = (ImageButton) view.findViewById(R.id.right_back_button);
 
         //Listenerの登録
         settingsButton.setOnClickListener(new View.OnClickListener() {
@@ -89,10 +94,12 @@ public class ManualFragment extends BaseFragment implements View.OnTouchListener
         mStopButton.setOnTouchListener(this);
         mForwardButton.setOnTouchListener(this);
         mBackButton.setOnTouchListener(this);
-        mLeftButton.setOnTouchListener(this);
-        mRightButton.setOnTouchListener(this);
         mTurnLeftButton.setOnTouchListener(this);
         mTurnRightButton.setOnTouchListener(this);
+        mLeftForwardButton.setOnTouchListener(this);
+        mRightForwardButton.setOnTouchListener(this);
+        mLeftBackButton.setOnTouchListener(this);
+        mRightBackButton.setOnTouchListener(this);
 
         return view;
     }
@@ -145,17 +152,23 @@ public class ManualFragment extends BaseFragment implements View.OnTouchListener
                     case R.id.back_button:
                         command = BACK;
                         break;
-                    case R.id.left_button:
-                        command = LEFT;
-                        break;
-                    case R.id.right_button:
-                        command = RIGHT;
-                        break;
                     case R.id.turn_left_button:
                         command = TURN_LEFT;
                         break;
                     case R.id.turn_right_button:
                         command = TURN_RIGHT;
+                        break;
+                    case R.id.left_forward_button:
+                        command = LEFT_FORWARD;
+                        break;
+                    case R.id.right_forward_button:
+                        command = RIGHT_FORWARD;
+                        break;
+                    case R.id.left_back_button:
+                        command = LEFT_BACK;
+                        break;
+                    case R.id.right_back_button:
+                        command = RIGHT_BACK;
                         break;
                 }
                 //コマンドの送信
@@ -274,20 +287,22 @@ public class ManualFragment extends BaseFragment implements View.OnTouchListener
         mStopButton.setEnabled(enabled);
         mForwardButton.setEnabled(enabled);
         mBackButton.setEnabled(enabled);
-        mLeftButton.setEnabled(enabled);
-        mRightButton.setEnabled(enabled);
         mTurnLeftButton.setEnabled(enabled);
         mTurnRightButton.setEnabled(enabled);
+        mLeftForwardButton.setEnabled(enabled);
+        mRightForwardButton.setEnabled(enabled);
+        mLeftBackButton.setEnabled(enabled);
+        mRightBackButton.setEnabled(enabled);
 
         //Lollipop以前の時,Tintが使えないのでこうする
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
             setButtonTint(mStopButton, enabled);
             setButtonTint(mForwardButton, enabled);
             setButtonTint(mBackButton, enabled);
-            setButtonTint(mLeftButton, enabled);
-            setButtonTint(mRightButton, enabled);
             setButtonTint(mTurnLeftButton, enabled);
             setButtonTint(mTurnRightButton, enabled);
+            setButtonTint(mLeftForwardButton, enabled);
+            setButtonTint(mRightForwardButton, enabled);
         }
     }
 }

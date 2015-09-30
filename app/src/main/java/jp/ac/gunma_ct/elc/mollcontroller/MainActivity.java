@@ -33,7 +33,10 @@ public class MainActivity extends AppCompatActivity
     private static final int REQUEST_CODE_SETTINGS = 1;
 
     private static final int VALUE_DEFAULT_SCAN_PERIOD = 10;
+    private static final int VALUE_DEFAULT_VELOCITY = 120;
     private static final int VALUE_DEFAULT_SENSOR_THRESHOLD = 500;
+    private static final int VALUE_DEFAULT_TURN_PERIOD = 500;
+    private static final int VALUE_DEFAULT_BACK_PERIOD = 500;
     private static final int VALUE_DEFAULT_INTERVAL = 1000;
     private static final int VALUE_DEFAULT_HISTORIES = 1;
     private static final int VALUE_DEFAULT_SEARCH_END_THRESHOLD = -40;
@@ -232,7 +235,10 @@ public class MainActivity extends AppCompatActivity
 
         editor.putBoolean(KEY_PREFERENCE_EXIST,true);
         editor.putInt(getString(R.string.key_scan_period), VALUE_DEFAULT_SCAN_PERIOD);
+        editor.putInt(getString(R.string.key_velocity), VALUE_DEFAULT_VELOCITY);
         editor.putInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
+        editor.putInt(getString(R.string.key_back_period), VALUE_DEFAULT_BACK_PERIOD);
+        editor.putInt(getString(R.string.key_turn_period), VALUE_DEFAULT_TURN_PERIOD);
         editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
         editor.putInt(getString(R.string.key_histories), VALUE_DEFAULT_HISTORIES);
         editor.putInt(getString(R.string.key_search_end_threshold), VALUE_DEFAULT_SEARCH_END_THRESHOLD);

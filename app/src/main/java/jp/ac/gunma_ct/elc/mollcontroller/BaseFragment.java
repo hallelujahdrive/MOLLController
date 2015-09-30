@@ -28,7 +28,10 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected static final String TAG_RESCAN = "RESCAN";
     protected static final String TAG_DEVICE_DATA = "DEVICE_DATA";
 
-    private static final int VALUE_DEFAULT_SENSOR_THRESHOLD = 500;
+    private static final int DEFAULT_VELOCITY = 120;
+    private static final int DEFAULT_SENSOR_THRESHOLD = 500;
+    private static final int DEFAULT_TURN_PERIOD = 500;
+    private static final int DEFAULT_BACK_PERIOD = 500;
 
     protected static final int REQUEST_CODE_DEVICE_LIST = 0;
     protected static final int REQUEST_CODE_RESCAN = 1;
@@ -43,10 +46,13 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected static final byte STOP = 0;
     protected static final byte FORWARD = 1;
     protected static final byte BACK = 2;
-    protected static final byte LEFT = 3;
-    protected static final byte RIGHT = 4;
-    protected static final byte TURN_LEFT = 5;
-    protected static final byte TURN_RIGHT = 6;
+    protected static final byte TURN_LEFT = 3;
+    protected static final byte TURN_RIGHT = 4;
+    protected static final byte LEFT_FORWARD = 5;
+    protected static final byte RIGHT_FORWARD = 6;
+    protected static final byte LEFT_BACK = 7;
+    protected static final byte RIGHT_BACK = 8;
+
 
     //LEDのピン出力
     protected static final byte LOW = 0;
@@ -123,16 +129,27 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     //Mollのセットアップ
     protected void setUpMoll(BluetoothGatt bluetoothGatt){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        int sensorThreshold = sp.getInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
+        Integer velocity = sp.getInt(getString(R.string.key_velocity), DEFAULT_VELOCITY);
 
-        ByteBuffer byteBuffer = ByteBuffer.allocate(4);
-        byteBuffer.putInt(sensorThreshold);
-        byte[] value = new byte[5];
+        byte[] value = new byte[14];
+        //フラグの挿入
         value[0] = SET_UP;
-        int i = 1;
-        for(byte data : byteBuffer.array()){
+        //速度の値の挿入
+        value[1] = velocity.byteValue();
+        int i = 2;
+        //センサの値の挿入
+        for(byte data : intToBytes(sp.getInt(getString(R.string.key_sensor_threshold), DEFAULT_SENSOR_THRESHOLD))){
             value[i++] = data;
         }
+        //後退時間の値の挿入
+        for(byte data : intToBytes(sp.getInt(getString(R.string.key_back_period), DEFAULT_BACK_PERIOD))){
+            value[i++] = data;
+        }
+        //転回時間の値の挿入
+        for(byte data : intToBytes(sp.getInt(getString(R.string.key_turn_period), DEFAULT_TURN_PERIOD))){
+            value[i++] = data;
+        }
+
         writeCharacteristic(bluetoothGatt, value);
     }
 
@@ -154,6 +171,13 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
             mTxCharacteristic.setValue(value);
             bluetoothGatt.writeCharacteristic(mTxCharacteristic);
         }
+    }
+
+    private byte[] intToBytes(int value){
+        ByteBuffer byteBuffer = ByteBuffer.allocate(4);
+        byteBuffer.putInt(value);
+
+        return byteBuffer.array();
     }
 
     public abstract void setUpMoll();

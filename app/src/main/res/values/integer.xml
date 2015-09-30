@@ -4,6 +4,22 @@
     <integer name="scan_period_max">6</integer>
     <integer name="scan_period_magnification">10</integer>
 
+    <integer name="velocity_min">80</integer>
+    <integer name="velocity_max">255</integer>
+    <integer name="velocity_magnification">1</integer>
+
+    <integer name="sensor_threshold_min">6</integer>
+    <integer name="sensor_threshold_max">20</integer>
+    <integer name="sensor_threshold_magnification">50</integer>
+    
+    <integer name="turn_period_min">4</integer>
+    <integer name="turn_period_max">40</integer>
+    <integer name="turn_period_magnification">50</integer>
+
+    <integer name="back_period_min">4</integer>
+    <integer name="back_period_max">40</integer>
+    <integer name="back_period_magnification">50</integer>
+
     <integer name="interval_min">10</integer>
     <integer name="interval_max">50</integer>
     <integer name="interval_magnification">100</integer>
@@ -15,8 +31,4 @@
     <integer name="search_end_threshold_min">30</integer>
     <integer name="search_end_threshold_max">100</integer>
     <integer name="search_end_threshold_magnification">-1</integer>
-
-    <integer name="sensor_threshold_min">6</integer>
-    <integer name="sensor_threshold_max">20</integer>
-    <integer name="sensor_threshold_magnification">50</integer>
 </resources>
