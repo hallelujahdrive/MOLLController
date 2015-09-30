@@ -448,6 +448,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                     //センサのリスナの登録
                     registerListener(true);
                     mSearching = true;
+                    //Toastの表示
+                    Toast.makeText(getActivity(), R.string.message_search_started, Toast.LENGTH_LONG).show();
                 }
                 break;
             case REQUEST_CODE_SEARCH_ABORT_CONFIRM:

@@ -43,6 +43,7 @@
     <string name="message_no_bluetooth">Bluetoothデバイスが存在しません</string>
     <string name="message_device_not_found">デバイスが見つかりませんでした</string>
     <string name="message_search_start">BLEタグ(%s)の探索を開始します</string>
+    <string name="message_search_started">探索を開始しました</string>
     <string name="message_search_abort">BLEタグ(%s)の探索を中止しますか?</string>
     <string name="message_found">BLEタグ(%s)を発見しました</string>
 
