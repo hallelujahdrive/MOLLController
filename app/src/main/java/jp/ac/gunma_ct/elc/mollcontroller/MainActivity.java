@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity
     private static final int VALUE_DEFAULT_TURN_PERIOD = 500;
     private static final int VALUE_DEFAULT_BACK_PERIOD = 500;
     private static final int VALUE_DEFAULT_INTERVAL = 1000;
+    private static final int VALUE_DEFAULT_TURN_DEGREE = 60;
     private static final int VALUE_DEFAULT_HISTORIES = 1;
     private static final int VALUE_DEFAULT_SEARCH_END_THRESHOLD = -40;
 
@@ -243,6 +244,7 @@ public class MainActivity extends AppCompatActivity
         editor.putInt(getString(R.string.key_back_period), VALUE_DEFAULT_BACK_PERIOD);
         editor.putInt(getString(R.string.key_turn_period), VALUE_DEFAULT_TURN_PERIOD);
         editor.putInt(getString(R.string.key_interval), VALUE_DEFAULT_INTERVAL);
+        editor.putInt(getString(R.string.key_turn_degree), VALUE_DEFAULT_TURN_DEGREE);
         editor.putInt(getString(R.string.key_histories), VALUE_DEFAULT_HISTORIES);
         editor.putInt(getString(R.string.key_search_end_threshold), VALUE_DEFAULT_SEARCH_END_THRESHOLD);
         editor.putString(getString(R.string.key_notification), RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM).toString());

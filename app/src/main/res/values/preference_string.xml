@@ -10,6 +10,7 @@
     <string name="key_turn_period">TURN_PERIOD</string>
 
     <string name="key_interval">INTERVAL</string>
+    <string name="key_turn_degree">TURN_DEGREE</string>
     <string name="key_histories">HISTORIES</string>
     <string name="key_search_end_threshold">SEARCH_END_THRESHOLD</string>
     <string name="key_notification">NOTIFICATION</string>

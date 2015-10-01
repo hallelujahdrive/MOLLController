@@ -34,6 +34,7 @@
     <string name="title_turn_period">回避の転回時間</string>
 
     <string name="title_auto_settings">自動探索の設定</string>
+    <string name="title_turn_degree">転回角度</string>
     <string name="title_interval">通信強度の更新間隔</string>
     <string name="title_histories">参照する通信強度の履歴</string>
     <string name="title_search_end_threshold">探索終了判定の閾値</string>
@@ -52,6 +53,7 @@
     <string name="message_search_start">BLEタグ(%s)の探索を開始します</string>
     <string name="message_search_started">探索を開始しました</string>
     <string name="message_search_abort">BLEタグ(%s)の探索を中止しますか?</string>
+    <string name="message_search_aborted">探索を中止しました</string>
     <string name="message_found">BLEタグ(%s)を発見しました</string>
 
     <string name="message_disconnected">切断しました</string>
@@ -80,8 +82,9 @@
 
     <string name="unit_second">秒</string>
     <string name="unit_milli_second">ミリ秒</string>
-    <string name="unit_decibel">dB</string>
+    <string name="unit_degree">度</string>
     <string name="unit_times">回</string>
+    <string name="unit_decibel">dB</string>
 
     <string name="device_type_classic">DEVICE TYPE CLASSIC</string>
     <string name="device_type_le">DEVICE TYPE LE</string>

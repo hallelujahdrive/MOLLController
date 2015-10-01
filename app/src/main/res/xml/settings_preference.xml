@@ -58,12 +58,19 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_auto_settings" >
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
-            android:key="@string/key_interval"
-            android:title="@string/title_interval"
-            app:min="@integer/interval_min"
-            app:max="@integer/interval_max"
-            app:magnification="@integer/interval_magnification"
-            app:unit="@string/unit_milli_second" />
+        android:key="@string/key_interval"
+        android:title="@string/title_interval"
+        app:min="@integer/interval_min"
+        app:max="@integer/interval_max"
+        app:magnification="@integer/interval_magnification"
+        app:unit="@string/unit_milli_second" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_turn_degree"
+            android:title="@string/title_turn_degree"
+            app:min="@integer/turn_degree_min"
+            app:max="@integer/turn_degree_max"
+            app:magnification="@integer/turn_degree_magnification"
+            app:unit="@string/unit_degree" />
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
             android:key="@string/key_histories"
             android:title="@string/title_histories"

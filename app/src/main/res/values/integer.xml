@@ -24,6 +24,10 @@
     <integer name="interval_max">50</integer>
     <integer name="interval_magnification">100</integer>
 
+    <integer name="turn_degree_min">1</integer>
+    <integer name="turn_degree_max">36</integer>
+    <integer name="turn_degree_magnification">10</integer>
+
     <integer name="histories_min">1</integer>
     <integer name="histories_max">5</integer>
     <integer name="histories_magnification">1</integer>

@@ -40,10 +40,10 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     private static final String TAG_SEARCH_ABORT_CONFIRM = "SEARCH_ABORT_CONFIRM";
 
     //回転角度(暫定)
-    private static final double MAX_DEG = Math.PI / 4;
 
     //デフォルトの値
     private static final int DEFAULT_INTERVAL = 1000;
+    private static final int DEFAULT_TURN_DEGREE = 60;
     private static final int DEFAULT_HISTORIES = 1;
     private static final int DEFAULT_THRESHOLD = -40;
 
@@ -66,8 +66,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     private long mInterval;
     private int mThreshold;
 
-    //通信強度の前回の取得時刻
-    private long mLast;
+    //転回角度
+    private double mTurnDegree;
 
     //通信強度の履歴
     private int[] mRssi;
@@ -78,7 +78,11 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     //センサの呼び出し回数
     private int mCount;
     private boolean register = false;
-    private boolean mSearching = false;
+
+    //探索中のフラグ
+    private boolean isSearching = false;
+    //展開中のフラグ
+    private boolean isTurning = false;
 
     public static AutoFragment newInstance(int sectionNumber) {
         AutoFragment fragment = new AutoFragment();
@@ -161,7 +165,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         mSearchButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mSearching) {
+                if (isSearching) {
                     //探索中断ダイアログを表示
                     openSearchAbortConfirmDialog();
                 } else {
@@ -232,20 +236,19 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                         @Override
                         public void onReadRemoteRssi(BluetoothGatt gatt, final int rssi, int status) {
                             //取得時刻
-                            mLast = System.currentTimeMillis();
                             handler.post(new Runnable() {
                                 @Override
                                 public void run() {
                                     //信号強度の表示
                                     mRssiTextView.setText(String.valueOf(rssi));
                                     //距離の表示
-                                    mDistanceTextView.setText(getDistance(rssi));
+                                    mDistanceTextView.setText(getDistance(rssi) + "m");
 
                                 }
                             });
 
-                            //探索中なら書き込み
-                            if (mSearching) {
+                            //探索中かつ転回中でない
+                            if (isSearching && !isTurning) {
                                 setCommand(rssi);
                             }
                         }
@@ -274,25 +277,11 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                                     @Override
                                     public void run() {
                                         while (deviceView.getConnectedStatus() && !mDestroyed) {
-                                            if(mLast == 0 || (mLast - System.currentTimeMillis()) <= mInterval * 2) {
-                                                mTagBluetoothGatt.readRemoteRssi();
-                                                try {
-                                                    Thread.sleep(mInterval);
-                                                } catch (InterruptedException e) {
-                                                    e.printStackTrace();
-                                                }
-                                            }else{
-                                                sendCommand(mMollBluetoothGatt, STOP);
-                                                //切断要求
-                                                mTagBluetoothGatt.disconnect();
-                                                handler.post(new Runnable() {
-                                                    @Override
-                                                    public void run() {
-                                                        //Toastの表示
-                                                        Toast.makeText(getActivity(), R.string.message_fault, Toast.LENGTH_LONG).show();
-                                                    }
-                                                });
-                                                break;
+                                            mTagBluetoothGatt.readRemoteRssi();
+                                            try {
+                                                Thread.sleep(mInterval);
+                                            } catch (InterruptedException e) {
+                                                e.printStackTrace();
                                             }
                                         }
                                     }
@@ -336,6 +325,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     public void setUp() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mInterval = sp.getInt(getString(R.string.key_interval), DEFAULT_INTERVAL);
+        //radに変換して読み込み
+        mTurnDegree = sp.getInt(getString(R.string.key_turn_degree), DEFAULT_TURN_DEGREE) * Math.PI / 180;
         int histories = sp.getInt(getString(R.string.key_histories), DEFAULT_HISTORIES);
         mThreshold = sp.getInt(getString(R.string.key_search_end_threshold), DEFAULT_THRESHOLD);
 
@@ -348,7 +339,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         double a = -70;
         double b = 3.5;
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
-        //numberFormat.setMaximumFractionDigits(1);
+        numberFormat.setMaximumFractionDigits(1);
 
         double distance = Math.pow(10, (a - rssi) / (10 * b));
 
@@ -362,31 +353,40 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
             if (getRssiAverage() == 0 || rssi >= getRssiAverage()) {
                 command = FORWARD;
             } else {
-                //回転開始の初期化
-                mTotalAngularVelocity = 0;
-                mCount = 0;
+
                 //左回転
                 command = TURN_LEFT;
-                if (mTxCharacteristic != null) {
-                    mTxCharacteristic.setValue(new byte[]{command});
-                    mMollBluetoothGatt.writeCharacteristic(mTxCharacteristic);
-                }
-                //回転開始時刻
-                long startMillis = System.currentTimeMillis();
-                double deg = 0;
-                while (deg < MAX_DEG) {
-                    //平均角速度(rad/s) * 回転時間(s)
-                    deg = mTotalAngularVelocity / mCount * (startMillis - System.currentTimeMillis()) / 1000;
-                }
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //回転開始の初期化
+                        mTotalAngularVelocity = 0;
+                        mCount = 0;
+                        isTurning = true;
+                        //回転開始時刻
+                        long startMillis = System.currentTimeMillis();
+                        double deg = 0;
+
+                        while (deg < mTurnDegree) {
+                            if(mTotalAngularVelocity != 0 && mCount != 0) {
+                                //平均角速度(rad/s) * 回転時間(s)
+                                deg = mTotalAngularVelocity / mCount * (System.currentTimeMillis() - startMillis) / 1000;
+                            }
+                        }
+                        isTurning = false;
+                    }
+                }).start();
+
             }
 
         } else {
             //到達したんじゃね？
             command = STOP;
-            //LEDを青に
+            //LEDを青色に
             setLed(mMollBluetoothGatt, LOW, LOW, HIGH);
 
-            mSearching = false;
+            isSearching = false;
             registerListener(false);
             handler.post(new Runnable() {
                 @Override
@@ -499,9 +499,11 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                 if(resultCode == BaseDialogFragment.RESULT_OK){
                     //初期化
                     resetRssi(0);
+                    //LEDをマゼンダに
+                    setLed(mMollBluetoothGatt, HIGH, LOW, HIGH);
                     //センサのリスナの登録
                     registerListener(true);
-                    mSearching = true;
+                    isSearching = true;
                     //Toastの表示
                     Toast.makeText(getActivity(), R.string.message_search_started, Toast.LENGTH_LONG).show();
                 }
@@ -512,7 +514,9 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                     sendCommand(mMollBluetoothGatt, STOP);
                     //センサのリスナの解除
                     registerListener(false);
-                    mSearching = false;
+                    isSearching = false;
+                    //Toastの表示
+                    Toast.makeText(getActivity(), R.string.message_search_aborted , Toast.LENGTH_LONG).show();
                 }
                 break;
             case REQUEST_CODE_FOUND_NOTIFICATION:
