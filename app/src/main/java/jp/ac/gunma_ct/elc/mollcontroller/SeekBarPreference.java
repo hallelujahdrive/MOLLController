@@ -54,7 +54,7 @@ public class SeekBarPreference extends DialogPreference {
         mSeekBar.setMax(mMax);
 
         //値の挿入
-        mSeekBar.setProgress(mValue / mMagnification);
+        mSeekBar.setProgress((mValue = getPersistedInt(0)) / mMagnification);
         mTextView.setText(String.valueOf(mValue));
 
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -78,6 +78,7 @@ public class SeekBarPreference extends DialogPreference {
             public void onStopTrackingTouch(SeekBar seekBar) {
                 //値を設定
                 mValue = seekBar.getProgress() * mMagnification;
+
             }
         });
 
