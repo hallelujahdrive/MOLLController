@@ -55,13 +55,20 @@ public class SettingsActivity extends AppCompatActivity{
 
     public static class SettingsFragment extends PreferenceFragment {
 
+        private static final String TAG_ABOUT_MOLL_CONTROLLER = "ABOUT_MOLL_CONTROLLER";
+
+        //Activityのリクエストコード
         private static final int REQUEST_CODE_RINGTONE_PICKER = 0;
+
+        //MOLL Controllerについて
+        private static final String ABOUT_MOLL_CONTROLLER_URL = "file:///android_asset/about_moll_controller.html";
 
         private SharedPreferences mSp;
 
         private Preference mAlarmPreference;
         //アラーム音のUri
         private Uri mUri;
+
 
         private SharedPreferences.OnSharedPreferenceChangeListener mOnSharedPreferenceChangeListener =new SharedPreferences.OnSharedPreferenceChangeListener() {
 
@@ -110,10 +117,26 @@ public class SettingsActivity extends AppCompatActivity{
                 });
             }
 
-            //ライセンス情報をクリックしたら別Activityを開く
-            Preference preference = findPreference(getString(R.string.key_license));
-            if(preference != null) {
-                preference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            //MOLL Controllerについて
+            Preference aboutMollContrillerPreference = findPreference(getString(R.string.key_about_moll_controller));
+            if(aboutMollContrillerPreference != null) {
+                aboutMollContrillerPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(final Preference preference) {
+                        //多重起動の防止
+                        if (getFragmentManager().findFragmentByTag(TAG_ABOUT_MOLL_CONTROLLER) == null) {
+                            webViewDialogFragment dialogFragment = webViewDialogFragment.newInstance(getString(R.string.title_about_moll_controller), ABOUT_MOLL_CONTROLLER_URL);
+                            dialogFragment.show(getFragmentManager(), TAG_ABOUT_MOLL_CONTROLLER);
+                        }
+                        return true;
+                    }
+                });
+            }
+
+            //ライセンス情報
+            Preference licencePreference = findPreference(getString(R.string.key_license));
+            if(licencePreference != null) {
+                licencePreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(final Preference preference) {
                         Intent i = new Intent(getActivity(), LicenseActivity.class);

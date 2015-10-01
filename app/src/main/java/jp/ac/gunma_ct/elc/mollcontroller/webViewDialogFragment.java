@@ -8,13 +8,13 @@ import android.webkit.WebView;
 /**
  * Created by Chiharu on 2015/08/25.
  */
-public class LicenseDialogFragment extends DialogFragment {
+public class webViewDialogFragment extends DialogFragment {
 
     private static final String ARG_TITLE = "TITLE";
     private static final String ARG_URL = "URL";
 
-    public static LicenseDialogFragment newInstance(String title,String url){
-        LicenseDialogFragment dialogFragment = new LicenseDialogFragment();
+    public static webViewDialogFragment newInstance(String title,String url){
+        webViewDialogFragment dialogFragment = new webViewDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_TITLE,title);
         args.putString(ARG_URL,url);

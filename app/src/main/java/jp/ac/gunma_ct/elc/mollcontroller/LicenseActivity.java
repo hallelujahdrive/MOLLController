@@ -21,14 +21,15 @@ public class LicenseActivity extends AppCompatActivity implements AdapterView.On
 
     private static final String TAG_LICENSE = "LICENSE";
 
+    private static final String[] HTML_URLS = {
+            "file:///android_asset/open_source_license.html",
+            "file:///android_asset/creative_commons_license.html"
+    };
+
     private ListView mListView;
     private ListAdapter mAdapter;
 
     private ArrayList<String> mTitleArray = new ArrayList<>();
-    private String[] mUrlArray = {
-            "file:///android_asset/open_source_license.html",
-            "file:///android_asset/creative_commons_license.html"
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +81,7 @@ public class LicenseActivity extends AppCompatActivity implements AdapterView.On
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //多重起動の防止
         if(getFragmentManager().findFragmentByTag(TAG_LICENSE) == null) {
-            LicenseDialogFragment dialogFragment = LicenseDialogFragment.newInstance(mTitleArray.get(position),mUrlArray[position]);
+            webViewDialogFragment dialogFragment = webViewDialogFragment.newInstance(mTitleArray.get(position), HTML_URLS[position]);
             dialogFragment.show(getFragmentManager(), TAG_LICENSE);
         }
     }

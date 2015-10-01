@@ -91,6 +91,9 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/title_other">
         <Preference
+            android:key="@string/key_about_moll_controller"
+            android:title="@string/title_about_moll_controller" />
+        <Preference
             android:key="@string/key_license"
             android:title="@string/title_license" />
     </PreferenceCategory>

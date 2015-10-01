@@ -1,8 +1,11 @@
 # MOLLController
-MOLL Controller is the Android Application that use Bluetooth Low Energy.
+MOLL Controller is the Android app that communicate with the Robot  used Arduino UNO and BLE Shield.
 
 ## Description
-MOLL Controllerは,BLEタグと通信し,Arduino制御の探索用ロボットを操作することのできるAndroidアプリです.
+MOLL Controllerは,Arduino UNOによって制御される専用ロボット,『MOLL』と通信し,動作させるためのAndroidアプリです.市販のBLEタグを探しだすことのできる自動探索機能と,MOLLをラジコン操作できるコントローラ機能があります.
+
+## Usage
+MOLLのソースコードは,[GitHub](https://github.com/kousokujin/BluetoothRobo)にて公開されています.
 
 ## LICENSE
 Copyright &copy; 2015 hallelujahdrive  

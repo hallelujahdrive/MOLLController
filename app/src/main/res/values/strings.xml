@@ -41,6 +41,7 @@
     <string name="title_notification">通知音</string>
 
     <string name="title_other">その他</string>
+    <string name="title_about_moll_controller">MOLL Controllerについて</string>
     <string name="title_license">ライセンス情報</string>
     <string name="title_open_source_license">オープンソースライセンス</string>
     <string name="title_creative_commons_license">クリエイティブ・コモンズ・ライセンス</string>
