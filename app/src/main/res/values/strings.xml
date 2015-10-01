@@ -25,7 +25,10 @@
     
     <string name="title_common_settings">共通設定</string>
     <string name="title_scan_period">デバイスの検索時間</string>
-    <string name="title_velocity">速度(PWMのデューティー比)</string>
+    <string name="title_velocity">速度(PWM)</string>
+    <string name="title_velocity_individual">速度を左右個別に設定する</string>
+    <string name="title_velocity_left">左側の速度(PWM)</string>
+    <string name="title_velocity_right">右側の速度(PWM)</string>
     <string name="title_sensor_threshold">赤外線センサの閾値</string>
     <string name="title_back_period">回避の後退時間</string>
     <string name="title_turn_period">回避の転回時間</string>

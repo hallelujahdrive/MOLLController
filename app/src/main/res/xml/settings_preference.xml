@@ -15,6 +15,26 @@
             app:min="@integer/velocity_min"
             app:max="@integer/velocity_max"
             app:magnification="@integer/velocity_magnification" />
+        <CheckBoxPreference
+            android:key="@string/key_velocity_individual"
+            android:title="@string/title_velocity_individual"
+            android:disableDependentsState="false" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_velocity_left"
+            android:title="@string/title_velocity_left"
+            android:dependency="@string/key_velocity_individual"
+            android:shouldDisableView="true"
+            app:min="@integer/velocity_min"
+            app:max="@integer/velocity_max"
+            app:magnification="@integer/velocity_magnification" />
+        <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
+            android:key="@string/key_velocity_right"
+            android:title="@string/title_velocity_right"
+            android:dependency="@string/key_velocity_individual"
+            android:shouldDisableView="true"
+            app:min="@integer/velocity_min"
+            app:max="@integer/velocity_max"
+            app:magnification="@integer/velocity_magnification" />
         <jp.ac.gunma_ct.elc.mollcontroller.SeekBarPreference
             android:key="@string/key_sensor_threshold"
             android:title="@string/title_sensor_threshold"

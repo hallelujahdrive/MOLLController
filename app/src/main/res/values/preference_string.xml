@@ -2,6 +2,9 @@
 <resources>
     <string name="key_scan_period">SCAN_PERIOD</string>
     <string name="key_velocity">VELOCITY</string>
+    <string name="key_velocity_individual">VELOCITY_INDEPENDENCE</string>
+    <string name="key_velocity_left">VELOCITY_LEFT</string>
+    <string name="key_velocity_right">VELOCITY_RIGHT</string>
     <string name="key_sensor_threshold">SENSOR_THRESHOLD</string>
     <string name="key_back_period">BACK_PERIOD</string>
     <string name="key_turn_period">TURN_PERIOD</string>

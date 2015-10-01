@@ -236,6 +236,9 @@ public class MainActivity extends AppCompatActivity
         editor.putBoolean(KEY_PREFERENCE_EXIST,true);
         editor.putInt(getString(R.string.key_scan_period), VALUE_DEFAULT_SCAN_PERIOD);
         editor.putInt(getString(R.string.key_velocity), VALUE_DEFAULT_VELOCITY);
+        editor.putBoolean(getString(R.string.key_velocity_individual), false);
+        editor.putInt(getString(R.string.key_velocity_left), VALUE_DEFAULT_VELOCITY);
+        editor.putInt(getString(R.string.key_velocity_right), VALUE_DEFAULT_VELOCITY);
         editor.putInt(getString(R.string.key_sensor_threshold), VALUE_DEFAULT_SENSOR_THRESHOLD);
         editor.putInt(getString(R.string.key_back_period), VALUE_DEFAULT_BACK_PERIOD);
         editor.putInt(getString(R.string.key_turn_period), VALUE_DEFAULT_TURN_PERIOD);

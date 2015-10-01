@@ -129,14 +129,14 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     //Mollのセットアップ
     protected void setUpMoll(BluetoothGatt bluetoothGatt){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        Integer velocity = sp.getInt(getString(R.string.key_velocity), DEFAULT_VELOCITY);
 
-        byte[] value = new byte[14];
+        byte[] value = new byte[15];
         //フラグの挿入
         value[0] = SET_UP;
         //速度の値の挿入
-        value[1] = velocity.byteValue();
-        int i = 2;
+        value[1] = getVecuty(R.string.key_velocity_left);
+        value[2] = getVecuty(R.string.key_velocity_right);
+        int i = 3;
         //センサの値の挿入
         for(byte data : intToBytes(sp.getInt(getString(R.string.key_sensor_threshold), DEFAULT_SENSOR_THRESHOLD))){
             value[i++] = data;
@@ -171,6 +171,13 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
             mTxCharacteristic.setValue(value);
             bluetoothGatt.writeCharacteristic(mTxCharacteristic);
         }
+    }
+
+    private byte getVecuty(int resId){
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        boolean individual = sp.getBoolean(getString(R.string.key_velocity_individual), false);
+        Integer velocity = individual ? sp.getInt(getString(resId), DEFAULT_VELOCITY) : sp.getInt(getString(R.string.key_velocity), DEFAULT_VELOCITY);
+        return velocity.byteValue();
     }
 
     private byte[] intToBytes(int value){
