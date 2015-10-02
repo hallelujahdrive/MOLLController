@@ -312,6 +312,9 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                             }
                             //メッセージ表示
                             Toast.makeText(getActivity(), R.string.message_disconnected, Toast.LENGTH_LONG).show();
+                            if(isSearching){
+                                onAbortSearching();
+                            }
                             //SearchButtonの無効
                             mSearchButton.setEnabled(false);
                         }
@@ -368,12 +371,12 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                         long startMillis = System.currentTimeMillis();
                         double deg = 0;
 
-                        while (deg < mTurnDegree) {
-                            if(mTotalAngularVelocity != 0 && mCount != 0) {
+                        do{
+                            if(mCount != 0) {
                                 //平均角速度(rad/s) * 回転時間(s)
                                 deg = mTotalAngularVelocity / mCount * (System.currentTimeMillis() - startMillis) / 1000;
                             }
-                        }
+                        }while(deg < mTurnDegree);
                         isTurning = false;
                     }
                 }).start();
@@ -459,6 +462,31 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         startActivityForResult(i, REQUEST_CODE_FOUND_NOTIFICATION);
     }
 
+    //探索中止
+    private void onAbortSearching(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                //停止コマンドの送信
+                sendCommand(mMollBluetoothGatt, STOP);
+                //ちょま
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                //LEDをマゼンダに
+                setLed(mMollBluetoothGatt, LOW, HIGH, LOW);
+                //センサのリスナの解除
+                registerListener(false);
+                isSearching = false;
+                isTurning = false;
+            }
+        }).start();
+        //Toastの表示
+        Toast.makeText(getActivity(), R.string.message_search_aborted , Toast.LENGTH_LONG).show();
+    }
+
     //センサのリスナの登録
     private void registerListener(boolean enabled){
         register = enabled;
@@ -510,13 +538,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                 break;
             case REQUEST_CODE_SEARCH_ABORT_CONFIRM:
                 if(resultCode == BaseDialogFragment.RESULT_OK){
-                    //停止コマンドの送信
-                    sendCommand(mMollBluetoothGatt, STOP);
-                    //センサのリスナの解除
-                    registerListener(false);
-                    isSearching = false;
-                    //Toastの表示
-                    Toast.makeText(getActivity(), R.string.message_search_aborted , Toast.LENGTH_LONG).show();
+                    onAbortSearching();
                 }
                 break;
             case REQUEST_CODE_FOUND_NOTIFICATION:
@@ -557,8 +579,13 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     public void onSensorChanged(SensorEvent event) {
         if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
             //values[2]はz軸の回転
-            mTotalAngularVelocity += event.values[2];
-            mCount++;
+            if(isTurning) {
+                double z = event.values[2];
+                if (z > 0) {
+                    mTotalAngularVelocity += z;
+                    mCount++;
+                }
+            }
         }
     }
 
