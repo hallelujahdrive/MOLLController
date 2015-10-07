@@ -400,7 +400,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
         }
 
         //コマンドの送信
-        sendCommand(mMollBluetoothGatt, command);
+        move(mMollBluetoothGatt, command);
+
         //電波強度の更新
         if(getRssiAverage() == 0){
             resetRssi(rssi);
@@ -468,7 +469,7 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
             @Override
             public void run() {
                 //停止コマンドの送信
-                sendCommand(mMollBluetoothGatt, STOP);
+                move(mMollBluetoothGatt, STOP);
                 //ちょま
                 try {
                     Thread.sleep(10);

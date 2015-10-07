@@ -138,13 +138,13 @@ public class ManualFragment extends BaseFragment implements View.OnTouchListener
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        int command = STOP;
+
         switch (event.getAction()){
             //ボタンを押した
             case MotionEvent.ACTION_DOWN:
-                byte command = STOP;
                 switch (v.getId()) {
                     case R.id.stop_button:
-                        command = STOP;
                         break;
                     case R.id.forward_button:
                         command = FORWARD;
@@ -172,13 +172,13 @@ public class ManualFragment extends BaseFragment implements View.OnTouchListener
                         break;
                 }
                 //コマンドの送信
-                sendCommand(mBluetoothGatt, command);
+                move(mBluetoothGatt, command);
                 break;
             //ボタンを離した
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 //コマンドの送信
-                sendCommand(mBluetoothGatt, STOP);
+                move(mBluetoothGatt, STOP);
                 break;
         }
         return false;

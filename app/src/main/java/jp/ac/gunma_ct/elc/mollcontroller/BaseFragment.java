@@ -28,7 +28,7 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected static final String TAG_RESCAN = "RESCAN";
     protected static final String TAG_DEVICE_DATA = "DEVICE_DATA";
 
-    private static final int DEFAULT_VELOCITY = 120;
+    private static final short DEFAULT_VELOCITY = 120;
     private static final int DEFAULT_SENSOR_THRESHOLD = 500;
     private static final int DEFAULT_TURN_PERIOD = 500;
     private static final int DEFAULT_BACK_PERIOD = 500;
@@ -39,8 +39,14 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
 
     //命令タイプ
     private static final byte SET_UP = 0;
-    private static final byte COMMAND = 1;
+    private static final byte MOVE = 1;
     private static final byte SET_LED = 2;
+
+    //move
+    private static final int leftP = 1;
+    private static final int leftN = 2;
+    private static final int rightP = 3;
+    private static final int rightN = 4;
 
     //コマンド
     protected static final byte STOP = 0;
@@ -67,6 +73,10 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
     protected BluetoothGattCharacteristic mTxCharacteristic;
 
     protected static Handler handler = new Handler();
+
+    //デフォルトの速度
+    protected byte mDefVelocityL;
+    protected byte mDefVelocityR;
 
     protected boolean mDestroyed = false;
 
@@ -134,8 +144,8 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
         //フラグの挿入
         value[0] = SET_UP;
         //速度の値の挿入
-        value[1] = getVecuty(R.string.key_velocity_left);
-        value[2] = getVecuty(R.string.key_velocity_right);
+        value[1] = mDefVelocityL = getVelocity(R.string.key_velocity_left);
+        value[2] = mDefVelocityR = getVelocity(R.string.key_velocity_right);
         int i = 3;
         //センサの値の挿入
         for(byte data : intToBytes(sp.getInt(getString(R.string.key_sensor_threshold), DEFAULT_SENSOR_THRESHOLD))){
@@ -153,9 +163,66 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
         writeCharacteristic(bluetoothGatt, value);
     }
 
-    //コマンドの送信
-    protected void sendCommand(BluetoothGatt bluetoothGatt, byte command){
-        byte[] value = {COMMAND, command};
+    //走行
+    protected void move(BluetoothGatt bluetoothGatt, int command){
+        byte[] value = {MOVE, 0, 0, 0, 0};
+
+        switch (command){
+            case STOP:
+                break;
+            case FORWARD:
+                value[leftP] = mDefVelocityL;
+                value[rightP] = mDefVelocityR;
+                break;
+            case BACK:
+                value[leftN] = mDefVelocityL;
+                value[rightN] = mDefVelocityR;
+                break;
+            case TURN_LEFT:
+                value[leftN] = mDefVelocityL;
+                value[rightP] = mDefVelocityR;
+                break;
+            case TURN_RIGHT:
+                value[leftP] = mDefVelocityL;
+                value[rightN] = mDefVelocityR;
+                break;
+            case LEFT_FORWARD:
+                value[rightP] = mDefVelocityR;
+                break;
+            case RIGHT_FORWARD:
+                value[leftP] = mDefVelocityL;
+                break;
+            case LEFT_BACK:
+                value[rightN] = mDefVelocityR;
+                break;
+            case RIGHT_BACK:
+                value[leftN] = mDefVelocityL;
+                break;
+        }
+
+        writeCharacteristic(bluetoothGatt, value);
+
+    }
+
+    protected void move(BluetoothGatt bluetoothGatt, Integer velocityL, Integer velocityR){
+        byte[] value = {MOVE, 0, 0, 0, 0};
+
+        //データの挿入
+        byte left = velocityL.byteValue();
+        byte right = velocityR.byteValue();
+        //左
+        if(velocityL >= 0){
+            value[leftP] = velocityL.byteValue();
+        }else{
+            value[leftN] = Integer.valueOf(-velocityL).byteValue();
+        }
+        //右
+        if(velocityR >= 0){
+            value[rightP] = velocityR.byteValue();
+        }else{
+            value[rightN] = Integer.valueOf(-velocityR).byteValue();
+        }
+
         writeCharacteristic(bluetoothGatt, value);
     }
 
@@ -173,7 +240,7 @@ public abstract class BaseFragment extends Fragment implements BaseDialogFragmen
         }
     }
 
-    private byte getVecuty(int resId){
+    private byte getVelocity(int resId){
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getActivity());
         boolean individual = sp.getBoolean(getString(R.string.key_velocity_individual), false);
         Integer velocity = individual ? sp.getInt(getString(resId), DEFAULT_VELOCITY) : sp.getInt(getString(R.string.key_velocity), DEFAULT_VELOCITY);
