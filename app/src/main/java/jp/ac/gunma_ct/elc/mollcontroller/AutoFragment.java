@@ -74,9 +74,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
     private int mHistories;
 
     //角速度合計
-    private double mTotalAngularVelocity;
+    private double mAngularVelocity;
     //センサの呼び出し回数
-    private int mCount;
     private boolean register = false;
 
     //探索中のフラグ
@@ -364,18 +363,15 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
                     @Override
                     public void run() {
                         //回転開始の初期化
-                        mTotalAngularVelocity = 0;
-                        mCount = 0;
+                        mAngularVelocity = 0;
                         isTurning = true;
                         //回転開始時刻
                         long startMillis = System.currentTimeMillis();
                         double deg = 0;
 
                         do{
-                            if(mCount != 0) {
-                                //平均角速度(rad/s) * 回転時間(s)
-                                deg = mTotalAngularVelocity / mCount * (System.currentTimeMillis() - startMillis) / 1000;
-                            }
+                            //角速度(rad/s) * 回転時間(s)
+                            deg = mAngularVelocity * (System.currentTimeMillis() - startMillis) / 1000;
                         }while(deg < mTurnDegree);
                         isTurning = false;
                     }
@@ -582,9 +578,8 @@ public class AutoFragment extends BaseFragment implements SensorEventListener {
             //values[2]はz軸の回転
             if(isTurning) {
                 double z = event.values[2];
-                if (z > 0) {
-                    mTotalAngularVelocity += z;
-                    mCount++;
+                if (z > mAngularVelocity) {
+                    mAngularVelocity = z;
                 }
             }
         }
